@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,6 +41,8 @@ button {
     cursor: pointer;
     border: none;
 }
+
+/* ================= HEADER ================= */
 
 header {
     background: var(--white);
@@ -94,6 +95,8 @@ header {
     color: var(--muted);
 }
 
+/* ================= NAVIGATION ================= */
+
 nav {
     display: flex;
     align-items: center;
@@ -101,11 +104,16 @@ nav {
 }
 
 .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     padding: 10px 18px;
     border-radius: 12px;
     background: transparent;
     color: var(--muted);
     font-weight: 600;
+    font-size: 14px;
     transition: 0.2s;
 }
 
@@ -114,6 +122,35 @@ nav {
     background: var(--yellow);
     color: var(--text);
 }
+
+/* ================= DATE & TIME ================= */
+
+.datetime-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 8px 14px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-width: 190px;
+}
+
+.datetime-time {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.5px;
+}
+
+.datetime-date {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+/* ================= MAIN ================= */
 
 main {
     max-width: 1400px;
@@ -143,6 +180,8 @@ main {
     font-size: 14px;
     margin-top: 5px;
 }
+
+/* ================= GRID & CARDS ================= */
 
 .grid {
     display: grid;
@@ -180,6 +219,8 @@ main {
     font-size: 12px;
     color: var(--muted);
 }
+
+/* ================= STATUS ================= */
 
 .status-card {
     background: linear-gradient(135deg, #fff0bd, #ffe49a);
@@ -220,6 +261,8 @@ main {
     font-size: 13px;
 }
 
+/* ================= METRICS ================= */
+
 .metric-label {
     color: var(--muted);
     font-size: 13px;
@@ -253,6 +296,8 @@ main {
     background: #fff9dd;
 }
 
+/* ================= AROMA PROGRESS ================= */
+
 .progress-track {
     width: 100%;
     height: 18px;
@@ -276,6 +321,8 @@ main {
     font-size: 12px;
     color: var(--muted);
 }
+
+/* ================= TIMER ================= */
 
 .timer-card {
     background: #fce8f0;
@@ -308,6 +355,8 @@ main {
     transform: translateY(-1px);
     background: var(--pink-dark);
 }
+
+/* ================= CONNECTION ================= */
 
 .connection-card {
     background: #fff;
@@ -352,6 +401,8 @@ main {
     font-weight: 700;
 }
 
+/* ================= CHART ================= */
+
 .chart-container {
     height: 300px;
     width: 100%;
@@ -362,6 +413,8 @@ canvas {
     width: 100%;
     height: 100%;
 }
+
+/* ================= HISTORY ================= */
 
 .history-table-wrap {
     overflow-x: auto;
@@ -391,12 +444,16 @@ th {
     font-size: 13px;
 }
 
+/* ================= FOOTER ================= */
+
 footer {
     padding: 25px;
     text-align: center;
     font-size: 11px;
     color: var(--muted);
 }
+
+/* ================= ALERT ================= */
 
 .alert-box {
     padding: 14px 16px;
@@ -412,6 +469,8 @@ footer {
     display: block;
 }
 
+/* ================= RESPONSIVE ================= */
+
 @media (max-width: 900px) {
     .span-8, .span-6, .span-4 {
         grid-column: span 12;
@@ -420,10 +479,19 @@ footer {
     main {
         padding: 25px 4%;
     }
+
+    .datetime-container {
+        margin-left: auto;
+    }
 }
 
 @media (max-width: 600px) {
     .header-container {
+        justify-content: center;
+    }
+
+    .brand {
+        width: 100%;
         justify-content: center;
     }
 
@@ -436,6 +504,11 @@ footer {
     .nav-btn {
         padding: 9px 12px;
         font-size: 12px;
+    }
+
+    .datetime-container {
+        align-items: center;
+        min-width: 100%;
     }
 
     .page-heading h2 {
@@ -463,7 +536,6 @@ footer {
     <div class="header-container">
 
         <div class="brand">
-            <!-- If you have logo.png, this image will appear -->
             <img src="logo.png" alt="OdorBot Logo"
                  onerror="this.style.display='none'">
 
@@ -473,19 +545,31 @@ footer {
             </div>
         </div>
 
+        <!-- NAVIGATION TO SEPARATE HTML FILES -->
         <nav>
-            <button class="nav-btn active" onclick="showPage('home', this)">
+            <a href="index.html" class="nav-btn active">
                 Home
-            </button>
+            </a>
 
-            <button class="nav-btn" onclick="showPage('dashboard', this)">
+            <a href="dashboard.html" class="nav-btn">
                 Dashboard
-            </button>
+            </a>
 
-            <button class="nav-btn" onclick="showPage('analytics', this)">
+            <a href="analytics.html" class="nav-btn">
                 Usage Analytics
-            </button>
+            </a>
         </nav>
+
+        <!-- LIVE DATE AND TIME -->
+        <div class="datetime-container">
+            <div id="currentTime" class="datetime-time">
+                --:--:--
+            </div>
+
+            <div id="currentDate" class="datetime-date">
+                Loading date...
+            </div>
+        </div>
 
     </div>
 </header>
@@ -611,7 +695,7 @@ footer {
 
 </section>
 
-<!-- ================= DASHBOARD PAGE ================= -->
+<!-- ================= DASHBOARD PAGE SECTION ================= -->
 
 <section id="dashboard" class="page">
 
@@ -706,8 +790,7 @@ footer {
                         </tr>
                     </thead>
 
-                    <tbody id="historyTable">
-                    </tbody>
+                    <tbody id="historyTable"></tbody>
                 </table>
 
                 <div id="historyEmpty" class="empty-state">
@@ -720,7 +803,7 @@ footer {
 
 </section>
 
-<!-- ================= ANALYTICS PAGE ================= -->
+<!-- ================= ANALYTICS PAGE SECTION ================= -->
 
 <section id="analytics" class="page">
 
@@ -805,26 +888,19 @@ footer {
 // FIREBASE CONFIGURATION
 // =====================================================
 
-// Your Firebase Realtime Database URL
 const FIREBASE_URL =
     "https://odorbot-ea9bb-default-rtdb.firebaseio.com/odorbot.json";
 
-// Refresh interval
 const REFRESH_INTERVAL = 2000;
 
-// Match Arduino threshold
 const AMMONIA_THRESHOLD = 1.0;
 
-// History storage
 const HISTORY_KEY = "odorbot_history";
 
-// Carbonized rice husk timer
 const TIMER_KEY = "odorbot_husk_timer";
 
-// 4 days in milliseconds
 const FOUR_DAYS = 4 * 24 * 60 * 60 * 1000;
 
-// Maximum number of stored readings
 const MAX_HISTORY = 500;
 
 // =====================================================
@@ -839,6 +915,40 @@ let lastFirebaseUpdate = null;
 let historyData = loadHistory();
 
 let firebaseTimer = null;
+
+// =====================================================
+// LIVE DATE & TIME
+// =====================================================
+
+function updateDateTime() {
+
+    const now = new Date();
+
+    const time = now.toLocaleTimeString("en-PH", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+    });
+
+    const date = now.toLocaleDateString("en-PH", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
+
+    const timeElement = document.getElementById("currentTime");
+    const dateElement = document.getElementById("currentDate");
+
+    if (timeElement) {
+        timeElement.textContent = time;
+    }
+
+    if (dateElement) {
+        dateElement.textContent = date;
+    }
+}
 
 // =====================================================
 // NAVIGATION
@@ -909,8 +1019,6 @@ function recordReading(nh3, aroma) {
 
     const now = Date.now();
 
-    // Avoid recording duplicate values too frequently.
-    // One record maximum every 10 seconds.
     const lastEntry = historyData[historyData.length - 1];
 
     if (lastEntry && now - lastEntry.timestamp < 10000) {
@@ -1085,7 +1193,6 @@ async function fetchFirebaseData() {
             throw new Error("Invalid ammonia or aroma data.");
         }
 
-        // Update values
         updateAmmoniaReading(nh3);
         updateAromaLevel(aroma);
 
@@ -1093,7 +1200,6 @@ async function fetchFirebaseData() {
 
         updateConnectionStatus(true);
 
-        // Record reading
         recordReading(nh3, aroma);
 
     } catch (error) {
@@ -1488,6 +1594,10 @@ window.addEventListener("resize", () => {
 // =====================================================
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    // Initialize live date and time
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
 
     renderHistoryTable();
 
