@@ -2,700 +2,1445 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OdorBot - Usage Analytics</title>
 
-    <link rel="icon" type="image/png" href="logo.png"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-    <title>OdorBot Monitoring Website - Usage Analytics</title>
+:root {
+    --yellow: #ffe89a;
+    --yellow-dark: #f4cb4e;
+    --pink: #f8c8d8;
+    --pink-dark: #eaa3bd;
+    --cream: #fffaf0;
+    --white: #ffffff;
+    --text: #443c39;
+    --muted: #8b817b;
+    --green: #39a875;
+    --red: #e16e6e;
+    --border: #eee4d8;
+    --shadow: 0 8px 24px rgba(90, 65, 50, 0.07);
+}
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+}
 
-    <style>
-        :root {
-            --brand-yellow: #fff86b;
-            --brand-pink: #f3aaa1;
-            --bg-main: #f5f5f5;
-            --text-main: #000;
-            --text-muted: #333;
-            --danger-main: #dc2626;
-            --success-main: #15803d;
-            --warning-main: #ca8a04;
-        }
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+}
 
-        * {
-            box-sizing: border-box;
-        }
+/* ================= HEADER ================= */
 
-        html, body {
-            min-height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: "Poppins", sans-serif;
-            color: var(--text-main);
-            background: var(--bg-main);
-        }
+header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 5%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--brand-yellow);
-            padding: 14px 3%;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border-bottom: 2px solid #000;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-        }
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+.brand img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
 
-        .logo-circle {
-            width: 48px;
-            height: 48px;
-            background: url("logo.png") no-repeat center/contain;
-            background-color: #fff;
-            border-radius: 50%;
-            flex-shrink: 0;
-            border: 1px solid #000;
-        }
+.brand h1 {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
 
-        .logo h1 {
-            margin: 0;
-            font-size: 1.25rem;
-            font-weight: 800;
-        }
+.brand p {
+    font-size: 11px;
+    color: var(--muted);
+}
 
-        .logo p {
-            margin: 2px 0 0;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
+nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
+.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s;
+}
 
-        nav a {
-            color: #000;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 0.95rem;
-            padding: 6px 12px;
-            border-radius: 6px;
-        }
+.nav-btn:hover,
+.nav-btn.active {
+    background: var(--yellow);
+    color: var(--text);
+}
 
-        nav a:hover,
-        nav a.active {
-            color: #bd648e;
-        }
+/* ================= DATE & TIME ================= */
 
-        nav a.active {
-            border-bottom: 2px solid #bd648e;
-            border-radius: 0;
-        }
+.datetime-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 8px 14px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-width: 190px;
+}
 
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
+.datetime-time {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.5px;
+}
 
-        .menu-toggle span {
-            width: 25px;
-            height: 3px;
-            background: #000;
-            border-radius: 3px;
-        }
+.datetime-date {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+}
 
-        .page {
-            max-width: 1180px;
-            width: 90%;
-            margin: 30px auto;
-            padding: 26px 30px 22px;
-            background: var(--brand-pink);
-            border: 1px solid #000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            flex: 1;
-        }
+/* ================= MAIN ================= */
 
-        .analytics-header h2 {
-            margin: 0 0 8px;
-            font-size: 1.8rem;
-            font-weight: 800;
-        }
+main {
+    max-width: 1400px;
+    padding: 30px 5%;
+    margin: auto;
+}
 
-        .analytics-header p {
-            margin: 0;
-            font-size: 0.88rem;
-            line-height: 1.5;
-            color: #222;
-        }
+.page-heading {
+    margin-bottom: 25px;
+}
 
-        .history-note {
-            background: #fff;
-            border: 1px solid #000;
-            padding: 12px 16px;
-            font-size: 0.85rem;
-            border-radius: 4px;
-        }
+.page-heading h2 {
+    font-size: 28px;
+    font-weight: 800;
+}
 
-        .history-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 14px;
-        }
+.page-heading p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 5px;
+}
 
-        .summary-card {
-            background: #fff;
-            border: 1px solid #000;
-            border-radius: 4px;
-            padding: 16px;
-        }
+/* ================= GRID & CARDS ================= */
 
-        .summary-card span {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
+.grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+}
 
-        .summary-card strong {
-            display: block;
-            margin-top: 5px;
-            font-size: 1.6rem;
-            font-weight: 800;
-        }
+.card {
+    background: var(--white);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(238, 228, 216, 0.7);
+}
 
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            background: #fff;
-            border: 1px solid #000;
-            border-radius: 4px;
-        }
+.span-12 { grid-column: span 12; }
+.span-8 { grid-column: span 8; }
+.span-6 { grid-column: span 6; }
+.span-4 { grid-column: span 4; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.88rem;
-        }
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
 
-        th {
-            background: #fff;
-            color: #000;
-            font-weight: 700;
-            padding: 12px 16px;
-            border-bottom: 2px solid #000;
-            white-space: nowrap;
-        }
+.card-title h3 {
+    font-size: 15px;
+    font-weight: 700;
+}
 
-        td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #e0e0e0;
-            color: #222;
-            white-space: nowrap;
-        }
+.card-title span {
+    font-size: 12px;
+    color: var(--muted);
+}
 
-        tr:last-child td {
-            border-bottom: none;
-        }
+/* ================= METRICS ================= */
 
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-        }
+.metric-label {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+}
 
-        .badge.high {
-            background: #fecaca;
-            color: #dc2626;
-            border: 1px solid #f87171;
-        }
+.metric-value {
+    font-size: 42px;
+    font-weight: 800;
+    margin-top: 8px;
+    letter-spacing: -1px;
+}
 
-        .badge.low {
-            background: #bbf7d0;
-            color: #16a34a;
-            border: 1px solid #4ade80;
-        }
+.metric-unit {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--muted);
+}
 
-        .chart-section {
-            background: #fff;
-            border: 1px solid #000;
-            border-radius: 4px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+.metric-footer {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 12px;
+}
 
-        .chart-section h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
+.ammonia-card {
+    background: #fff4f5;
+}
 
-        .chart-wrapper {
-            position: relative;
-            width: 100%;
-            height: 340px;
-        }
+.high-card {
+    background: #ffe8e8;
+}
 
-        .empty-message {
-            text-align: center;
-            color: #555;
-            padding: 24px;
-        }
+.low-card {
+    background: #fff9dd;
+}
 
-        footer {
-            text-align: center;
-            color: #555;
-            font-size: 0.85rem;
-            margin-top: auto;
-            padding: 20px 10px;
-            background: #fff;
-        }
+.operation-card {
+    background: #fce8f0;
+}
 
-        @media (max-width: 850px) {
-            .page {
-                padding: 20px;
-            }
-        }
+.aroma-card {
+    background: #e4f6ec;
+}
 
-        @media (max-width: 600px) {
-            header {
-                padding: 10px 15px;
-            }
+/* ================= STATUS ================= */
 
-            .logo-circle {
-                width: 40px;
-                height: 40px;
-            }
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border-radius: 30px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #e4f6ec;
+    color: #2b9663;
+    white-space: nowrap;
+}
 
-            .logo h1 {
-                font-size: 0.9rem;
-            }
+.status-pill.high {
+    background: #ffe1e1;
+    color: #c24e4e;
+}
 
-            .logo p {
-                font-size: 0.65rem;
-            }
+.status-pill.low {
+    background: #fff4d0;
+    color: #a47a1f;
+}
 
-            .menu-toggle {
-                display: flex;
-            }
+.status-pill.very-low {
+    background: #e7f3ed;
+    color: #46866b;
+}
 
-            nav.primary {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--brand-yellow);
-                display: none;
-                flex-direction: column;
-                gap: 0;
-                box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            }
+.status-pill.very-high {
+    background: #ffd4d4;
+    color: #b33d3d;
+}
 
-            nav.primary.show {
-                display: flex;
-            }
+/* ================= CHART ================= */
 
-            nav.primary a {
-                width: 100%;
-                padding: 13px;
-                text-align: center;
-                border-bottom: 1px solid rgba(0,0,0,0.08);
-            }
+.chart-container {
+    width: 100%;
+    height: 360px;
+    position: relative;
+}
 
-            .page {
-                margin: 20px auto;
-                width: 95%;
-                padding: 20px 15px;
-            }
+.chart-container canvas {
+    width: 100%;
+    height: 100%;
+}
 
-            .analytics-header h2 {
-                font-size: 1.55rem;
-            }
+/* ================= TABLE ================= */
 
-            footer {
-                font-size: 0.75rem;
-            }
-        }
-    </style>
+.history-table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 850px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+th {
+    color: var(--muted);
+    font-weight: 600;
+    background: #fffdf9;
+    white-space: nowrap;
+}
+
+.empty-state {
+    padding: 35px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ================= BUTTONS ================= */
+
+.primary-btn {
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: var(--pink);
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 16px;
+    transition: 0.2s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    background: var(--pink-dark);
+}
+
+.secondary-btn {
+    background: #f4f1eb;
+    color: var(--text);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ================= INFO / ALERTS ================= */
+
+.info-box {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #fff9dd;
+    color: #8c7134;
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.alert-box {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: #fff0f0;
+    color: #b64b4b;
+    font-size: 12px;
+    margin-top: 15px;
+    display: none;
+}
+
+.alert-box.show {
+    display: block;
+}
+
+/* ================= CONNECTION STATUS ================= */
+
+.connection-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.connection-status.connected {
+    color: var(--green);
+}
+
+.connection-status.disconnected {
+    color: var(--red);
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--yellow-dark);
+    display: inline-block;
+}
+
+.connection-status.connected .status-dot {
+    background: var(--green);
+}
+
+.connection-status.disconnected .status-dot {
+    background: var(--red);
+}
+
+.connection-detail {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    padding: 25px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+    .span-8, .span-6, .span-4 {
+        grid-column: span 12;
+    }
+
+    main {
+        padding: 25px 4%;
+    }
+
+    .datetime-container {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .header-container {
+        justify-content: center;
+    }
+
+    .brand {
+        width: 100%;
+        justify-content: center;
+    }
+
+    nav {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .nav-btn {
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+
+    .datetime-container {
+        align-items: center;
+        min-width: 100%;
+    }
+
+    .page-heading h2 {
+        font-size: 23px;
+    }
+
+    .metric-value {
+        font-size: 35px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+}
+</style>
 </head>
 
 <body>
-    <header role="banner">
-        <div class="logo">
-            <div class="logo-circle"></div>
+
+<header>
+    <div class="header-container">
+
+        <div class="brand">
+            <img src="logo.png" alt="OdorBot Logo"
+                 onerror="this.style.display='none'">
+
             <div>
-                <h1>OdorBot Monitoring System</h1>
-                <p>Air Quality &amp; Odor Tracking System</p>
+                <h1>ODORBOT</h1>
+                <p>Monitoring System</p>
             </div>
         </div>
 
-        <button class="menu-toggle"
-                aria-label="Toggle menu"
-                aria-expanded="false">
-
-            <span></span>
-            <span></span>
-            <span></span>
-
-        </button>
-
-        <nav class="primary"
-             role="navigation"
-             aria-label="Main Navigation">
-
-            <a href="home.html">Home</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="analytics.html" class="active">Usage Analytics</a>
+        <nav>
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="dashboard.html" class="nav-btn">Dashboard</a>
+            <a href="analytics.html" class="nav-btn active">Usage Analytics</a>
         </nav>
-    </header>
 
-    <main class="page" role="main">
-        <section class="analytics-header">
-            <h2>Usage Analytics Log</h2>
-            <p>
-                Historical ammonia readings received from the MQ-137 sensor.
-            </p>
-
-        </section>
-
-
-        <div class="history-note" id="history-note">
-
-            Readings are saved by the Dashboard in this browser.
-            Connect the Arduino on the Dashboard to begin collecting history.
-
+        <div class="datetime-container">
+            <div id="currentTime" class="datetime-time">--:--:--</div>
+            <div id="currentDate" class="datetime-date">Loading date...</div>
         </div>
 
-        <section class="history-summary">
+    </div>
+</header>
 
-            <div class="summary-card">
-                <span>Total Saved Readings</span>
-                <strong id="total-readings">0</strong>
+<main>
+
+    <div class="page-heading">
+        <h2>Usage Analytics</h2>
+        <p>Historical ammonia readings, detection records, and OdorBot operation logs.</p>
+    </div>
+
+    <div class="info-box">
+        Historical ammonia readings are retrieved directly from Firebase.
+        Each record represents a reading received and stored by the ESP8266.
+        Fan activation time is displayed when available.
+    </div>
+
+    <div class="grid">
+
+        <!-- AMMONIA GRAPH -->
+
+        <div class="card span-12">
+            <div class="card-title">
+                <h3>Ammonia Reading History</h3>
+                <span id="chartRecordCount">0 readings</span>
             </div>
 
-            <div class="summary-card">
-                <span>Highest Reading</span>
-                <strong id="highest-reading">—</strong>
+            <div class="chart-container">
+                <canvas id="ammoniaChart"></canvas>
             </div>
 
-            <div class="summary-card">
-                <span>Latest Reading</span>
-                <strong id="latest-reading">—</strong>
+            <div class="metric-footer">
+                The graph includes low, normal, high, and very high readings.
             </div>
-        </section>
-
-
-        <!-- HISTORY TABLE -->
-        <div class="table-container">
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Time Recorded</th>
-                        <th>Ammonia Reading</th>
-                        <th>Level</th>
-                    </tr>
-                </thead>
-
-                <tbody id="history-table">
-                    <tr>
-                        <td colspan="4" class="empty-message">
-                            No readings saved yet.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
 
-        <!-- HISTORY GRAPH -->
-        <section class="chart-section">
-            <h3>Ammonia Reading History</h3>
-            <div class="chart-wrapper">
-                <canvas id="analyticsChart"></canvas>
+        <!-- DETECTION RECORDS -->
+
+        <div class="card span-12">
+            <div class="card-title">
+                <h3>Ammonia Detection Records</h3>
+                <span id="recordsCount">0 records</span>
             </div>
-        </section>
-    </main>
 
-    <!-- FOOTER -->
-    <footer role="contentinfo">
-        &copy; <span id="year"></span>
-        OdorBot Monitoring Website. All Rights Reserved.
-    </footer>
+            <div class="history-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time Recorded</th>
+                            <th>NH₃ (ppm)</th>
+                            <th>Ammonia Range</th>
+                            <th>Fan Activated At</th>
+                        </tr>
+                    </thead>
 
+                    <tbody id="detectionTable"></tbody>
+                </table>
 
-    <script>
+                <div id="detectionEmpty" class="empty-state">
+                    No ammonia readings recorded yet.
+                </div>
+            </div>
+        </div>
 
-        const HISTORY_KEY = 'odorbotReadingHistory';
-        const THRESHOLD_PPM = 3.0;
-        const MAX_TABLE_ROWS = 100;
+        <!-- FAN OPERATION LOG -->
 
-        const toggleBtn = document.querySelector('.menu-toggle');
-        const nav = document.querySelector('nav.primary');
+        <div class="card span-12">
+            <div class="card-title">
+                <h3>OdorBot Operation Log</h3>
+                <span>High readings only</span>
+            </div>
 
-        toggleBtn.addEventListener('click', () => {
-            const isOpen = nav.classList.toggle('show');
-            toggleBtn.setAttribute('aria-expanded', isOpen);
+            <div class="history-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Detection Time</th>
+                            <th>Ammonia (ppm)</th>
+                            <th>Range</th>
+                            <th>Fan Activation Time</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="operationTable"></tbody>
+                </table>
+
+                <div id="operationEmpty" class="empty-state">
+                    No high-ammonia fan operation records available.
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top:20px; margin-bottom:0;">
+                Fan activation time shows when the exhaust fan was activated
+                following a high ammonia reading. The time is displayed when
+                a fan activation timestamp is provided by Firebase.
+            </div>
+        </div>
+
+        <!-- RANGE SUMMARY -->
+
+        <div class="card span-12">
+            <div class="card-title">
+                <h3>Ammonia Range Summary</h3>
+                <span>Distribution of recorded readings</span>
+            </div>
+
+            <div class="grid">
+
+                <div class="card span-4 low-card">
+                    <div class="metric-label">Very Low</div>
+                    <div class="metric-value" id="veryLowCount">0</div>
+                </div>
+
+                <div class="card span-4 low-card">
+                    <div class="metric-label">Low</div>
+                    <div class="metric-value" id="lowCount">0</div>
+                </div>
+
+                <div class="card span-4 aroma-card">
+                    <div class="metric-label">Normal</div>
+                    <div class="metric-value" id="normalCount">0</div>
+                </div>
+
+                <div class="card span-6 high-card">
+                    <div class="metric-label">High</div>
+                    <div class="metric-value" id="highCountRange">0</div>
+                </div>
+
+                <div class="card span-6 high-card">
+                    <div class="metric-label">Very High</div>
+                    <div class="metric-value" id="veryHighCount">0</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- CONNECTION -->
+
+        <div class="card span-12">
+            <div class="card-title">
+                <h3>Analytics Data Connection</h3>
+            </div>
+
+            <div class="connection-row">
+                <div>
+                    <div id="connectionStatus" class="connection-status">
+                        <span class="status-dot"></span>
+                        <span id="connectionText">Connecting to Firebase...</span>
+                    </div>
+
+                    <div id="connectionDetail" class="connection-detail">
+                        Checking historical database connection
+                    </div>
+                </div>
+
+                <button class="secondary-btn" onclick="fetchFirebaseData()">
+                    Refresh Data
+                </button>
+            </div>
+
+            <div id="firebaseError" class="alert-box">
+                Unable to retrieve historical data from Firebase.
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    ODORBOT MONITORING SYSTEM &bull; Smart Odor Monitoring
+</footer>
+
+<!-- Chart.js MUST load before the analytics script -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+// =====================================================
+// FIREBASE CONFIGURATION
+// =====================================================
+
+const FIREBASE_HISTORY_URL =
+    "https://odorbot-ea9bb-default-rtdb.firebaseio.com/odorbot_history.json";
+
+const REFRESH_INTERVAL = 5000;
+
+const AMMONIA_THRESHOLD = 1.0;
+
+const VERY_LOW_LIMIT = 0.25;
+const LOW_LIMIT = 0.50;
+const HIGH_LIMIT = 5.00;
+
+const ANALYTICS_KEY = "odorbot_analytics_history";
+const MAX_HISTORY = 2000;
+
+// =====================================================
+// GLOBAL VARIABLES
+// =====================================================
+
+let analyticsData = loadAnalyticsHistory();
+
+let chartInstance = null;
+let firebaseConnected = false;
+let fetchInProgress = false;
+
+// =====================================================
+// DATE & TIME
+// =====================================================
+
+function updateDateTime() {
+
+    const now = new Date();
+
+    const time = now.toLocaleTimeString("en-PH", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+    });
+
+    const date = now.toLocaleDateString("en-PH", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
+
+    document.getElementById("currentTime").textContent = time;
+    document.getElementById("currentDate").textContent = date;
+}
+
+// =====================================================
+// LOCAL CACHE
+// =====================================================
+
+function loadAnalyticsHistory() {
+
+    try {
+
+        const saved = localStorage.getItem(ANALYTICS_KEY);
+
+        if (!saved) return [];
+
+        const parsed = JSON.parse(saved);
+
+        return Array.isArray(parsed) ? parsed : [];
+
+    } catch (error) {
+
+        console.error("Analytics history loading error:", error);
+
+        return [];
+    }
+}
+
+function saveAnalyticsHistory() {
+
+    try {
+
+        localStorage.setItem(
+            ANALYTICS_KEY,
+            JSON.stringify(analyticsData)
+        );
+
+    } catch (error) {
+
+        console.error("Unable to save analytics history:", error);
+    }
+}
+
+// =====================================================
+// AMMONIA RANGE
+// =====================================================
+
+function getAmmoniaRange(nh3) {
+
+    if (nh3 < VERY_LOW_LIMIT) return "Very Low";
+
+    if (nh3 < LOW_LIMIT) return "Low";
+
+    if (nh3 <= AMMONIA_THRESHOLD) return "Normal";
+
+    if (nh3 < HIGH_LIMIT) return "High";
+
+    return "Very High";
+}
+
+function getRangeClass(range) {
+
+    switch (range) {
+
+        case "Very Low":
+            return "very-low";
+
+        case "Low":
+            return "low";
+
+        case "Normal":
+            return "";
+
+        case "High":
+            return "high";
+
+        case "Very High":
+            return "very-high";
+
+        default:
+            return "";
+    }
+}
+
+function isHighReading(nh3) {
+    return nh3 > AMMONIA_THRESHOLD;
+}
+
+// =====================================================
+// CONNECTION STATUS
+// =====================================================
+
+function updateConnectionStatus(connected, message = "") {
+
+    firebaseConnected = connected;
+
+    const status = document.getElementById("connectionStatus");
+    const text = document.getElementById("connectionText");
+    const detail = document.getElementById("connectionDetail");
+    const error = document.getElementById("firebaseError");
+
+    status.classList.remove("connected", "disconnected");
+
+    status.classList.add(
+        connected ? "connected" : "disconnected"
+    );
+
+    text.textContent = connected
+        ? "Firebase Connected"
+        : "Firebase Disconnected";
+
+    detail.textContent = connected
+        ? message || "Historical database is responding."
+        : message || "Unable to retrieve historical data.";
+
+    error.classList.toggle("show", !connected);
+
+    if (!connected) {
+        error.textContent =
+            message || "Unable to retrieve data from Firebase.";
+    }
+}
+
+// =====================================================
+// TIMESTAMP NORMALIZATION
+// =====================================================
+
+function normalizeTimestamp(value) {
+
+    if (value === null || value === undefined) {
+        return null;
+    }
+
+    let timestamp = Number(value);
+
+    if (!Number.isFinite(timestamp) || timestamp <= 0) {
+        return null;
+    }
+
+    // Convert seconds to milliseconds if necessary
+    if (timestamp < 1000000000000) {
+        timestamp *= 1000;
+    }
+
+    const date = new Date(timestamp);
+
+    if (isNaN(date.getTime())) {
+        return null;
+    }
+
+    return timestamp;
+}
+
+// =====================================================
+// FIREBASE HISTORY FETCH
+// =====================================================
+
+async function fetchFirebaseData() {
+
+    if (fetchInProgress) return;
+
+    fetchInProgress = true;
+
+    try {
+
+        const response = await fetch(
+            FIREBASE_HISTORY_URL + "?_=" + Date.now(),
+            {
+                method: "GET",
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+        }
+
+        const firebaseRecords = await response.json();
+
+        if (!firebaseRecords || typeof firebaseRecords !== "object") {
+
+            updateConnectionStatus(
+                true,
+                "Firebase connected. No historical records found yet."
+            );
+
+            mergeFirebaseRecords([]);
+
+            return;
+        }
+
+        const records = [];
+
+        // Firebase POST records are stored under unique keys
+        Object.entries(firebaseRecords).forEach(([firebaseKey, record]) => {
+
+            if (!record || typeof record !== "object") return;
+
+            const nh3 = Number(record.nh3);
+
+            if (!Number.isFinite(nh3)) return;
+
+            const timestamp = normalizeTimestamp(record.timestamp);
+
+            // Skip records with invalid timestamps
+            if (!timestamp) return;
+
+            const fanTimestamp = normalizeTimestamp(
+                record.fanActivatedAt
+            );
+
+            records.push({
+                firebaseKey: firebaseKey,
+                timestamp: timestamp,
+                nh3: nh3,
+                aroma: Number(record.aroma ?? 0),
+                range: getAmmoniaRange(nh3),
+                fanOn: record.fanOn ?? false,
+                fanEvent: Number(record.fanEvent ?? 0),
+                fanActivatedAt: fanTimestamp
+            });
         });
 
-        document.getElementById('year').textContent =
-            new Date().getFullYear();
+        mergeFirebaseRecords(records);
 
-        let analyticsChart = null;
+        updateConnectionStatus(
+            true,
+            "Firebase historical records successfully retrieved."
+        );
 
-        function getHistory() {
-            try {
+    } catch (error) {
 
-                const saved = JSON.parse(
-                    localStorage.getItem(HISTORY_KEY) || '[]'
-                );
+        console.error("Firebase history error:", error);
 
-                return Array.isArray(saved)
-                    ? saved.filter(item =>
-                        item &&
-                        Number.isFinite(Number(item.ppm)) &&
-                        Number.isFinite(Number(item.timestamp))
-                    )
-                    : [];
+        updateConnectionStatus(
+            false,
+            error.message || "Historical data connection failed."
+        );
 
-            } catch (error) {
-                console.error('Could not read saved history:', error);
-                return [];
+        // Continue showing locally cached records
+        updateAnalyticsDisplay();
 
+    } finally {
+
+        fetchInProgress = false;
+    }
+}
+
+// =====================================================
+// MERGE FIREBASE RECORDS
+// =====================================================
+
+function mergeFirebaseRecords(firebaseRecords) {
+
+    const map = new Map();
+
+    // Preserve existing cached records
+    analyticsData.forEach(entry => {
+
+        if (entry.firebaseKey) {
+            map.set(entry.firebaseKey, entry);
+        }
+    });
+
+    // Update / insert records from Firebase
+    firebaseRecords.forEach(entry => {
+
+        map.set(entry.firebaseKey, entry);
+    });
+
+    analyticsData = Array.from(map.values())
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+    if (analyticsData.length > MAX_HISTORY) {
+        analyticsData = analyticsData.slice(-MAX_HISTORY);
+    }
+
+    saveAnalyticsHistory();
+
+    updateAnalyticsDisplay();
+}
+
+// =====================================================
+// GET ALL READINGS
+// =====================================================
+
+function getAllReadings() {
+
+    return [...analyticsData]
+        .filter(entry =>
+            entry &&
+            Number.isFinite(Number(entry.nh3)) &&
+            Number.isFinite(Number(entry.timestamp))
+        )
+        .sort((a, b) =>
+            Number(a.timestamp) - Number(b.timestamp)
+        );
+}
+
+// =====================================================
+// UPDATE ANALYTICS
+// =====================================================
+
+function updateAnalyticsDisplay() {
+
+    const readings = getAllReadings();
+
+    renderDetectionTable(readings);
+    renderOperationTable(readings);
+    updateRangeSummary(readings);
+    drawAmmoniaChart(readings);
+
+    document.getElementById("chartRecordCount").textContent =
+        readings.length + " readings";
+}
+
+// =====================================================
+// RANGE SUMMARY
+// =====================================================
+
+function updateRangeSummary(readings) {
+
+    let veryLow = 0;
+    let low = 0;
+    let normal = 0;
+    let high = 0;
+    let veryHigh = 0;
+
+    readings.forEach(entry => {
+
+        const range = getAmmoniaRange(Number(entry.nh3));
+
+        switch (range) {
+
+            case "Very Low":
+                veryLow++;
+                break;
+
+            case "Low":
+                low++;
+                break;
+
+            case "Normal":
+                normal++;
+                break;
+
+            case "High":
+                high++;
+                break;
+
+            case "Very High":
+                veryHigh++;
+                break;
+        }
+    });
+
+    document.getElementById("veryLowCount").textContent = veryLow;
+    document.getElementById("lowCount").textContent = low;
+    document.getElementById("normalCount").textContent = normal;
+    document.getElementById("highCountRange").textContent = high;
+    document.getElementById("veryHighCount").textContent = veryHigh;
+}
+
+// =====================================================
+// FORMAT FAN ACTIVATION TIME
+// =====================================================
+
+function formatFanActivation(entry) {
+
+    if (!entry.fanActivatedAt) {
+        return "Not available";
+    }
+
+    const fanTime = new Date(Number(entry.fanActivatedAt));
+
+    if (isNaN(fanTime.getTime())) {
+        return "Not available";
+    }
+
+    return fanTime.toLocaleTimeString("en-PH", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+    });
+}
+
+// =====================================================
+// DETECTION TABLE
+// =====================================================
+
+function renderDetectionTable(readings) {
+
+    const tbody = document.getElementById("detectionTable");
+    const empty = document.getElementById("detectionEmpty");
+
+    tbody.innerHTML = "";
+
+    const recent = [...readings]
+        .sort((a, b) => b.timestamp - a.timestamp);
+
+    document.getElementById("recordsCount").textContent =
+        recent.length + " records";
+
+    empty.style.display = recent.length === 0
+        ? "block"
+        : "none";
+
+    recent.forEach(entry => {
+
+        const date = new Date(Number(entry.timestamp));
+        const nh3 = Number(entry.nh3);
+        const range = getAmmoniaRange(nh3);
+
+        const fanActivation = isHighReading(nh3)
+            ? formatFanActivation(entry)
+            : "Not triggered";
+
+        const row = document.createElement("tr");
+
+        const cells = [
+            date.toLocaleDateString("en-PH"),
+            date.toLocaleTimeString("en-PH"),
+            nh3.toFixed(2) + " ppm",
+            range,
+            fanActivation
+        ];
+
+        cells.forEach((value, index) => {
+
+            const cell = document.createElement("td");
+
+            if (index === 3) {
+
+                const badge = document.createElement("span");
+
+                badge.className =
+                    "status-pill " + getRangeClass(range);
+
+                badge.textContent = range;
+
+                cell.appendChild(badge);
+
+            } else {
+
+                cell.textContent = value;
             }
-        }
 
-        function getLevel(ppm) {
-            return ppm >= THRESHOLD_PPM
-                ? 'High'
-                : 'Normal';
+            row.appendChild(cell);
+        });
 
-        }
+        tbody.appendChild(row);
+    });
+}
 
-        function formatDate(timestamp) {
-            return new Date(timestamp).toLocaleDateString();
+// =====================================================
+// FAN OPERATION LOG - HIGH READINGS ONLY
+// =====================================================
 
-        }
+function renderOperationTable(readings) {
 
-        function formatTime(timestamp) {
-            return new Date(timestamp).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-        }
+    const tbody = document.getElementById("operationTable");
+    const empty = document.getElementById("operationEmpty");
 
-        function renderHistory() {
-            const history = getHistory();
-            const tableBody =
-                document.getElementById('history-table');
+    tbody.innerHTML = "";
 
-            document.getElementById('total-readings').textContent =
-                history.length;
+    const highRecords = readings
+        .filter(entry => isHighReading(Number(entry.nh3)))
+        .sort((a, b) => b.timestamp - a.timestamp);
 
-            if (history.length === 0) {
-                document.getElementById('highest-reading').textContent = '—';
-                document.getElementById('latest-reading').textContent = '—';
-                document.getElementById('history-note').textContent =
-                    'No readings have been saved yet. Open the Dashboard, connect the Arduino, and keep the connection active to collect readings.';
+    empty.style.display = highRecords.length === 0
+        ? "block"
+        : "none";
 
-                tableBody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="empty-message">
-                            No readings saved yet.
-                        </td>
-                    </tr>
-                `;
-                updateChart([]);
-                return;
+    highRecords.forEach(entry => {
+
+        const detectionDate = new Date(Number(entry.timestamp));
+        const nh3 = Number(entry.nh3);
+        const range = getAmmoniaRange(nh3);
+
+        const fanActivation = formatFanActivation(entry);
+
+        const row = document.createElement("tr");
+
+        const values = [
+            detectionDate.toLocaleDateString("en-PH"),
+            detectionDate.toLocaleTimeString("en-PH"),
+            nh3.toFixed(2) + " ppm",
+            range,
+            fanActivation
+        ];
+
+        values.forEach((value, index) => {
+
+            const cell = document.createElement("td");
+
+            if (index === 3) {
+
+                const badge = document.createElement("span");
+
+                badge.className =
+                    "status-pill " + getRangeClass(range);
+
+                badge.textContent = range;
+
+                cell.appendChild(badge);
+
+            } else {
+
+                cell.textContent = value;
             }
 
-            const highest = Math.max(
-                ...history.map(item => Number(item.ppm))
-            );
+            row.appendChild(cell);
+        });
 
-            const latest = history[history.length - 1];
+        tbody.appendChild(row);
+    });
+}
 
-            document.getElementById('highest-reading').textContent =
-                highest.toFixed(1) + ' PPM';
+// =====================================================
+// AMMONIA GRAPH
+// =====================================================
 
-            document.getElementById('latest-reading').textContent =
-                Number(latest.ppm).toFixed(1) + ' PPM';
+function drawAmmoniaChart(readings) {
 
-            document.getElementById('history-note').textContent =
-                'Showing saved sensor readings from this browser. The table displays the latest ' +
-                Math.min(history.length, MAX_TABLE_ROWS) +
-                ' records.';
+    const canvas = document.getElementById("ammoniaChart");
 
-            const recent = history
-                .slice(-MAX_TABLE_ROWS)
-                .reverse();
+    if (!canvas || typeof Chart === "undefined") {
+        console.error("Chart.js is not loaded.");
+        return;
+    }
 
-            tableBody.innerHTML = recent.map(item => {
-                const ppm = Number(item.ppm);
-                const level = getLevel(ppm);
-                const badgeClass =
-                    level === 'High' ? 'high' : 'low';
+    const ctx = canvas.getContext("2d");
 
-                return `
-                    <tr>
-                        <td>${formatDate(Number(item.timestamp))}</td>
+    const data = [...readings]
+        .sort((a, b) => a.timestamp - b.timestamp);
 
-                        <td>${formatTime(Number(item.timestamp))}</td>
+    if (chartInstance) {
+        chartInstance.destroy();
+    }
 
-                        <td>${ppm.toFixed(1)} PPM</td>
+    if (data.length === 0) {
 
-                        <td>
-                            <span class="badge ${badgeClass}">
-                                ${level}
-                            </span>
-                        </td>
-                    </tr>
-                `;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            }).join('');
+        ctx.font = "13px Poppins";
+        ctx.fillStyle = "#8b817b";
+        ctx.textAlign = "center";
 
-            updateChart(history);
-        }
+        ctx.fillText(
+            "Waiting for ammonia readings...",
+            canvas.width / 2,
+            canvas.height / 2
+        );
 
-        function updateChart(history) {
-            const canvas =
-                document.getElementById('analyticsChart');
-            const labels = history.map(item =>
+        return;
+    }
 
-                new Date(
-                    Number(item.timestamp)
-                ).toLocaleString()
-            );
+    const labels = data.map(entry =>
+        new Date(Number(entry.timestamp)).toLocaleString("en-PH", {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        })
+    );
 
-            const values = history.map(item =>
-                Number(item.ppm)
-            );
+    const values = data.map(entry => Number(entry.nh3));
 
-            if (analyticsChart) {
-                analyticsChart.data.labels = labels;
-                analyticsChart.data.datasets[0].data = values;
-                analyticsChart.update();
-                return;
-            }
+    chartInstance = new Chart(ctx, {
 
-            analyticsChart = new Chart(canvas, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Ammonia Reading (PPM)',
-                        data: values,
-                        borderColor: '#dc2626',
-                        backgroundColor: 'rgba(220, 38, 38, 0.15)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#dc2626',
-                        pointRadius: 3
-                    }]
+        type: "line",
+
+        data: {
+            labels: labels,
+
+            datasets: [
+                {
+                    label: "Ammonia (ppm)",
+                    data: values,
+                    borderColor: "#e7b54d",
+                    backgroundColor: "rgba(231,181,77,0.15)",
+                    borderWidth: 3,
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
+                    tension: 0.25,
+                    fill: true
+                },
+                {
+                    label: "Threshold",
+                    data: labels.map(() => AMMONIA_THRESHOLD),
+                    borderColor: "#e16e6e",
+                    borderWidth: 2,
+                    borderDash: [6, 5],
+                    pointRadius: 0,
+                    tension: 0,
+                    fill: false
+                }
+            ]
+        },
+
+        options: {
+
+            responsive: true,
+            maintainAspectRatio: false,
+
+            interaction: {
+                intersect: false,
+                mode: "index"
+            },
+
+            plugins: {
+                legend: {
+                    display: true,
+                    labels: {
+                        font: {
+                            family: "Poppins"
+                        }
+                    }
                 },
 
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
 
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Concentration (PPM)',
-                                font: {
-                                    family: 'Poppins',
-                                    weight: 'bold'
-                                }
-                            }
-                        },
-                        x: {
-
-                            title: {
-                                display: true,
-                                text: 'Date and Time Recorded',
-                                font: {
-                                    family: 'Poppins',
-                                    weight: 'bold'
-                                }
-                            },
-
-                            ticks: {
-                                maxTicksLimit: 10
-                            }
-                        }
-                    },
-
-                    plugins: {
-                        legend: {
-                            labels: {
-                                font: {
-                                    family: 'Poppins',
-                                    weight: 'bold'
-                                }
-                            }
+                            return context.dataset.label +
+                                ": " +
+                                Number(context.parsed.y).toFixed(2) +
+                                " ppm";
                         }
                     }
                 }
-            });
-        }
+            },
 
+            scales: {
 
-        // LOAD HISTORY WHEN PAGE OPENS
+                x: {
+                    ticks: {
+                        maxTicksLimit: 8,
+                        maxRotation: 45,
+                        minRotation: 0,
+                        font: {
+                            family: "Poppins",
+                            size: 10
+                        }
+                    },
 
-        renderHistory();
+                    title: {
+                        display: true,
+                        text: "Date and Time"
+                    }
+                },
 
-        window.addEventListener('storage', event => {
-            if (event.key === HISTORY_KEY) {
-                renderHistory();
+                y: {
+                    beginAtZero: true,
 
+                    title: {
+                        display: true,
+                        text: "Ammonia Concentration (ppm)"
+                    }
+                }
             }
+        }
+    });
+}
 
-        });
+// =====================================================
+// INITIALIZATION
+// =====================================================
 
-        setInterval(renderHistory, 5000);
+document.addEventListener("DOMContentLoaded", () => {
 
-    </script>
+    // Date and time
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+
+    // Display cached historical data immediately
+    updateAnalyticsDisplay();
+
+    // Fetch Firebase historical data
+    fetchFirebaseData();
+
+    // Refresh historical data periodically
+    setInterval(fetchFirebaseData, REFRESH_INTERVAL);
+});
+
+</script>
 
 </body>
 </html>
