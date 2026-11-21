@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="logo.png"/>
+
+    <title>OdorBot Monitoring Website</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-yellow: #fff86b;
+            --brand-pink: #f3aaa1;
+            --brand-pink-dark: #e59990;
+            --brand-black: #000000;
+            --bg-main: #f5f5f5;
+            --card-bg: #f3aaa1;
+            --text-main: #000000;
+            --text-muted: #333333;
+            --border-color: #000000;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+
+            --danger-main: #dc2626;
+            --danger-bg: #fef2f2;
+            --danger-border: #fca5a5;
+            --success-main: #15803d;
+            --success-bg: #f0fdf4;
+            --success-border: #86efac;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            color: var(--text-main);
+            background: var(--bg-main);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--brand-yellow);
+            padding: 14px 3%;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-circle {
+            width: 48px;
+            height: 48px;
+            background: url("logo.png") no-repeat center/contain;
+            background-color: #ffffff;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--text-main);
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        .logo p {
+            margin: 2px 0 0;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        nav a:hover {
+            color: #bd648e;
+            background: rgba(0,0,0,0.04);
+        }
+
+        nav a.active {
+            color: #bd648e;
+            border-bottom: 2px solid #bd648e;
+            border-radius: 0;
+        }
+
+        .page {
+            max-width: 1120px;
+            width: 90%;
+            margin: 40px auto;
+            padding: 40px;
+            background: var(--card-bg); /* Pink container */
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+
+            display: grid;
+            grid-template-columns: 1fr 240px;
+            grid-template-areas:
+                "intro logo"
+                "features features";
+
+            column-gap: 48px;
+            row-gap: 40px;
+
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .intro {
+            grid-area: intro;
+        }
+
+        .intro h2 {
+            margin: 0 0 12px;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-main);
+        }
+
+        .intro p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #222222;
+        }
+
+        .about-image {
+            grid-area: logo;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+            padding: 16px;
+        }
+
+        .about-image img {
+            width: 100%;
+            max-width: 160px;
+            height: auto;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+
+        .features {
+            grid-area: features;
+            display: grid;
+            grid-template-columns: 1fr 1.25fr;
+            align-items: center;
+            gap: 48px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 40px;
+        }
+
+        .picture-holder {
+            width: 100%;
+            height: 220px;
+            background: #cbd5df;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-content h2 {
+            margin: 0 0 12px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text-main);
+        }
+
+        .feature-content p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #222222;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .menu-toggle span {
+            width: 24px;
+            height: 2px;
+            background: var(--text-main);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        footer {
+            text-align: center;
+            color: #555555;
+            font-size: 0.85rem;
+            margin-top: auto;
+            padding: 24px 0;
+            border-top: 1px solid #e2e8f0;
+            background: #ffffff;
+        }
+
+        @media (max-width: 850px) {
+            .page {
+                grid-template-columns: 1fr 180px;
+                column-gap: 24px;
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            nav.primary {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--brand-yellow);
+                display: none;
+                flex-direction: column;
+                gap: 0;
+                border-bottom: 1px solid var(--border-color);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            }
+
+            nav.primary.show {
+                display: flex;
+            }
+
+            nav.primary a {
+                width: 100%;
+                padding: 16px 24px;
+                border-bottom: 1px solid rgba(0,0,0,0.1);
+            }
+
+            .page {
+                width: 95%;
+                margin: 20px auto;
+                padding: 24px;
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "intro"
+                    "logo"
+                    "features";
+                gap: 24px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 24px;
+                padding-top: 24px;
+            }
+
+            .about-image {
+                max-width: 200px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header role="banner">
+        <div class="logo">
+            <div class="logo-circle"></div>
+            <div>
+                <h1>OdorBot Monitoring</h1>
+                <p>Air Quality & Odor Tracking</p>
+            </div>
+        </div>
+
+        <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="primary" role="navigation" aria-label="Main Navigation">
+            <a href="home.html" class="active">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="analytics.html">Analytics</a>
+        </nav>
+    </header>
+
+    <main class="page" role="main">
+        <section class="intro">
+            <h2>OdorBot System</h2>
+            <p>
+               Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here.
+            </p>
+        </section>
+
+        <div class="about-image">
+            <img src="logo.png" alt="OdorBot Logo">
+        </div>
+
+        <section class="features">
+            <div class="picture-holder" aria-label="Picture placeholder">
+                <span>Feature Preview Graphic</span>
+            </div>
+
+            <div class="feature-content">
+                <h2>Key Features</h2>
+                <p>
+                    Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div>
+            &copy; <span id="year"></span> OdorBot Monitoring Website. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        const toggleBtn = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('nav.primary');
+
+        toggleBtn.addEventListener('click', () => {
+            const isOpen = nav.classList.toggle('show');
+            toggleBtn.setAttribute('aria-expanded', isOpen);
+        });
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>

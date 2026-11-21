@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <link rel="icon" type="image/png" href="logo.png"/>
+
+    <title>OdorBot Monitoring Website - Usage Analytics</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --brand-yellow: #fff86b;
+            --brand-pink: #f3aaa1;
+            --bg-main: #f5f5f5;
+            --text-main: #000;
+            --text-muted: #333;
+            --danger-main: #dc2626;
+            --success-main: #15803d;
+            --warning-main: #ca8a04;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            min-height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            color: var(--text-main);
+            background: var(--bg-main);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--brand-yellow);
+            padding: 14px 3%;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border-bottom: 2px solid #000;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-circle {
+            width: 48px;
+            height: 48px;
+            background: url("logo.png") no-repeat center/contain;
+            background-color: #fff;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1px solid #000;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .logo p {
+            margin: 2px 0 0;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        nav a {
+            color: #000;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: #bd648e;
+        }
+
+        nav a.active {
+            border-bottom: 2px solid #bd648e;
+            border-radius: 0;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #000;
+            border-radius: 3px;
+        }
+
+        .page {
+            max-width: 1180px;
+            width: 90%;
+            margin: 30px auto;
+            padding: 26px 30px 22px;
+            background: var(--brand-pink);
+            border: 1px solid #000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            flex: 1;
+        }
+
+        .analytics-header h2 {
+            margin: 0 0 8px;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .analytics-header p {
+            margin: 0;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #222;
+        }
+
+        .history-note {
+            background: #fff;
+            border: 1px solid #000;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            border-radius: 4px;
+        }
+
+        .history-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+        }
+
+        .summary-card {
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: 4px;
+            padding: 16px;
+        }
+
+        .summary-card span {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .summary-card strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: #fff;
+            color: #000;
+            font-weight: 700;
+            padding: 12px 16px;
+            border-bottom: 2px solid #000;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #222;
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .badge.high {
+            background: #fecaca;
+            color: #dc2626;
+            border: 1px solid #f87171;
+        }
+
+        .badge.low {
+            background: #bbf7d0;
+            color: #16a34a;
+            border: 1px solid #4ade80;
+        }
+
+        .chart-section {
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: 4px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chart-section h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 340px;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #555;
+            padding: 24px;
+        }
+
+        footer {
+            text-align: center;
+            color: #555;
+            font-size: 0.85rem;
+            margin-top: auto;
+            padding: 20px 10px;
+            background: #fff;
+        }
+
+        @media (max-width: 850px) {
+            .page {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 10px 15px;
+            }
+
+            .logo-circle {
+                width: 40px;
+                height: 40px;
+            }
+
+            .logo h1 {
+                font-size: 0.9rem;
+            }
+
+            .logo p {
+                font-size: 0.65rem;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            nav.primary {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--brand-yellow);
+                display: none;
+                flex-direction: column;
+                gap: 0;
+                box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            }
+
+            nav.primary.show {
+                display: flex;
+            }
+
+            nav.primary a {
+                width: 100%;
+                padding: 13px;
+                text-align: center;
+                border-bottom: 1px solid rgba(0,0,0,0.08);
+            }
+
+            .page {
+                margin: 20px auto;
+                width: 95%;
+                padding: 20px 15px;
+            }
+
+            .analytics-header h2 {
+                font-size: 1.55rem;
+            }
+
+            footer {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header role="banner">
+        <div class="logo">
+            <div class="logo-circle"></div>
+            <div>
+                <h1>OdorBot Monitoring System</h1>
+                <p>Air Quality &amp; Odor Tracking System</p>
+            </div>
+        </div>
+
+        <button class="menu-toggle"
+                aria-label="Toggle menu"
+                aria-expanded="false">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </button>
+
+        <nav class="primary"
+             role="navigation"
+             aria-label="Main Navigation">
+
+            <a href="home.html">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="analytics.html" class="active">Usage Analytics</a>
+        </nav>
+    </header>
+
+    <main class="page" role="main">
+        <section class="analytics-header">
+            <h2>Usage Analytics Log</h2>
+            <p>
+                Historical ammonia readings received from the MQ-137 sensor.
+            </p>
+
+        </section>
+
+
+        <div class="history-note" id="history-note">
+
+            Readings are saved by the Dashboard in this browser.
+            Connect the Arduino on the Dashboard to begin collecting history.
+
+        </div>
+
+        <section class="history-summary">
+
+            <div class="summary-card">
+                <span>Total Saved Readings</span>
+                <strong id="total-readings">0</strong>
+            </div>
+
+            <div class="summary-card">
+                <span>Highest Reading</span>
+                <strong id="highest-reading">—</strong>
+            </div>
+
+            <div class="summary-card">
+                <span>Latest Reading</span>
+                <strong id="latest-reading">—</strong>
+            </div>
+        </section>
+
+
+        <!-- HISTORY TABLE -->
+        <div class="table-container">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time Recorded</th>
+                        <th>Ammonia Reading</th>
+                        <th>Level</th>
+                    </tr>
+                </thead>
+
+                <tbody id="history-table">
+                    <tr>
+                        <td colspan="4" class="empty-message">
+                            No readings saved yet.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- HISTORY GRAPH -->
+        <section class="chart-section">
+            <h3>Ammonia Reading History</h3>
+            <div class="chart-wrapper">
+                <canvas id="analyticsChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer role="contentinfo">
+        &copy; <span id="year"></span>
+        OdorBot Monitoring Website. All Rights Reserved.
+    </footer>
+
+
+    <script>
+
+        const HISTORY_KEY = 'odorbotReadingHistory';
+        const THRESHOLD_PPM = 3.0;
+        const MAX_TABLE_ROWS = 100;
+
+        const toggleBtn = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('nav.primary');
+
+        toggleBtn.addEventListener('click', () => {
+            const isOpen = nav.classList.toggle('show');
+            toggleBtn.setAttribute('aria-expanded', isOpen);
+        });
+
+        document.getElementById('year').textContent =
+            new Date().getFullYear();
+
+        let analyticsChart = null;
+
+        function getHistory() {
+            try {
+
+                const saved = JSON.parse(
+                    localStorage.getItem(HISTORY_KEY) || '[]'
+                );
+
+                return Array.isArray(saved)
+                    ? saved.filter(item =>
+                        item &&
+                        Number.isFinite(Number(item.ppm)) &&
+                        Number.isFinite(Number(item.timestamp))
+                    )
+                    : [];
+
+            } catch (error) {
+                console.error('Could not read saved history:', error);
+                return [];
+
+            }
+        }
+
+        function getLevel(ppm) {
+            return ppm >= THRESHOLD_PPM
+                ? 'High'
+                : 'Normal';
+
+        }
+
+        function formatDate(timestamp) {
+            return new Date(timestamp).toLocaleDateString();
+
+        }
+
+        function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function renderHistory() {
+            const history = getHistory();
+            const tableBody =
+                document.getElementById('history-table');
+
+            document.getElementById('total-readings').textContent =
+                history.length;
+
+            if (history.length === 0) {
+                document.getElementById('highest-reading').textContent = '—';
+                document.getElementById('latest-reading').textContent = '—';
+                document.getElementById('history-note').textContent =
+                    'No readings have been saved yet. Open the Dashboard, connect the Arduino, and keep the connection active to collect readings.';
+
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="empty-message">
+                            No readings saved yet.
+                        </td>
+                    </tr>
+                `;
+                updateChart([]);
+                return;
+            }
+
+            const highest = Math.max(
+                ...history.map(item => Number(item.ppm))
+            );
+
+            const latest = history[history.length - 1];
+
+            document.getElementById('highest-reading').textContent =
+                highest.toFixed(1) + ' PPM';
+
+            document.getElementById('latest-reading').textContent =
+                Number(latest.ppm).toFixed(1) + ' PPM';
+
+            document.getElementById('history-note').textContent =
+                'Showing saved sensor readings from this browser. The table displays the latest ' +
+                Math.min(history.length, MAX_TABLE_ROWS) +
+                ' records.';
+
+            const recent = history
+                .slice(-MAX_TABLE_ROWS)
+                .reverse();
+
+            tableBody.innerHTML = recent.map(item => {
+                const ppm = Number(item.ppm);
+                const level = getLevel(ppm);
+                const badgeClass =
+                    level === 'High' ? 'high' : 'low';
+
+                return `
+                    <tr>
+                        <td>${formatDate(Number(item.timestamp))}</td>
+
+                        <td>${formatTime(Number(item.timestamp))}</td>
+
+                        <td>${ppm.toFixed(1)} PPM</td>
+
+                        <td>
+                            <span class="badge ${badgeClass}">
+                                ${level}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+
+            }).join('');
+
+            updateChart(history);
+        }
+
+        function updateChart(history) {
+            const canvas =
+                document.getElementById('analyticsChart');
+            const labels = history.map(item =>
+
+                new Date(
+                    Number(item.timestamp)
+                ).toLocaleString()
+            );
+
+            const values = history.map(item =>
+                Number(item.ppm)
+            );
+
+            if (analyticsChart) {
+                analyticsChart.data.labels = labels;
+                analyticsChart.data.datasets[0].data = values;
+                analyticsChart.update();
+                return;
+            }
+
+            analyticsChart = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Ammonia Reading (PPM)',
+                        data: values,
+                        borderColor: '#dc2626',
+                        backgroundColor: 'rgba(220, 38, 38, 0.15)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#dc2626',
+                        pointRadius: 3
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Concentration (PPM)',
+                                font: {
+                                    family: 'Poppins',
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        x: {
+
+                            title: {
+                                display: true,
+                                text: 'Date and Time Recorded',
+                                font: {
+                                    family: 'Poppins',
+                                    weight: 'bold'
+                                }
+                            },
+
+                            ticks: {
+                                maxTicksLimit: 10
+                            }
+                        }
+                    },
+
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: {
+                                    family: 'Poppins',
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        // LOAD HISTORY WHEN PAGE OPENS
+
+        renderHistory();
+
+        window.addEventListener('storage', event => {
+            if (event.key === HISTORY_KEY) {
+                renderHistory();
+
+            }
+
+        });
+
+        setInterval(renderHistory, 5000);
+
+    </script>
+
+</body>
+</html>

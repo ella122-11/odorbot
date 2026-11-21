@@ -1,0 +1,614 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OdorBot Monitoring System - Dashboard</title>
+
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --yellow: #f5c542;
+            --yellow-light: #fff7d6;
+            --pink: #f5a6b8;
+            --pink-light: #fff0f4;
+            --dark: #292929;
+            --gray: #777;
+            --white: #fff;
+            --green: #239b56;
+            --red: #e74c3c;
+            --shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #fffaf0;
+            color: var(--dark);
+        }
+
+        header {
+            background: var(--white);
+            padding: 18px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: var(--shadow);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+        }
+
+        .brand h1 {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .brand p {
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: #d49b00;
+        }
+
+        .connect-button {
+            background: var(--yellow);
+            color: var(--dark);
+            border: none;
+            border-radius: 25px;
+            padding: 11px 22px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .connect-button:hover {
+            background: #e9b72e;
+        }
+
+        .connect-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h2 {
+            font-size: 27px;
+            font-weight: 700;
+        }
+
+        .page-heading p {
+            color: var(--gray);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .connection-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border-radius: 20px;
+            padding: 8px 14px;
+            margin-bottom: 22px;
+            font-size: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--red);
+        }
+
+        .dot.connected {
+            background: var(--green);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            border-top: 5px solid var(--yellow);
+            min-height: 210px;
+        }
+
+        .card.pink {
+            border-top-color: var(--pink);
+        }
+
+        .card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 17px;
+        }
+
+        .card-description {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        .big-value {
+            font-size: 38px;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .unit {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .status {
+            display: inline-block;
+            border-radius: 20px;
+            padding: 7px 17px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .status.normal {
+            color: #176b3a;
+            background: #dff5e7;
+        }
+
+        .status.high {
+            color: #a52a20;
+            background: #ffe2df;
+        }
+
+        .progress-track {
+            height: 12px;
+            width: 100%;
+            background: #eee;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--pink);
+            border-radius: 20px;
+            transition: width 0.4s;
+        }
+
+        .timer-value {
+            font-size: 29px;
+            font-weight: 700;
+            margin: 12px 0;
+        }
+
+        .small-button {
+            margin-top: 12px;
+            border: none;
+            background: var(--yellow-light);
+            padding: 9px 17px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .small-button:hover {
+            background: #ffe9a0;
+        }
+
+        .last-update {
+            margin-top: 25px;
+            color: var(--gray);
+            font-size: 11px;
+            text-align: right;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        @media (max-width: 700px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav {
+                gap: 14px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-heading h2 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="brand">
+        <img src="logo.png" alt="OdorBot Logo">
+        <div>
+            <h1>ODORBOT</h1>
+            <p>Air Quality &amp; Odor Tracking System</p>
+        </div>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="analytics.html">Usage Analytics</a>
+    </nav>
+</header>
+
+<main>
+    <div class="page-heading">
+        <h2>Monitoring Dashboard</h2>
+        <p>Monitor ammonia concentration and OdorBot system information.</p>
+    </div>
+
+    <div class="connection-status">
+        <span class="dot" id="connection-dot"></span>
+        <span id="connection-text">Arduino Disconnected</span>
+    </div>
+
+    <section class="dashboard-grid">
+
+        <div class="card">
+            <h3>Ammonia Status</h3>
+            <p class="card-description">Current detected ammonia condition</p>
+            <div>
+                <span class="status normal" id="ammonia-status">
+                    NORMAL LEVEL
+                </span>
+            </div>
+            <p class="card-description" id="status-description">
+                Waiting for Arduino readings...
+            </p>
+        </div>
+
+        <div class="card pink">
+            <h3>Current Concentration</h3>
+            <div class="big-value">
+                <span id="ammonia-value">--</span>
+                <span class="unit">PPM</span>
+            </div>
+            <p class="card-description">Ammonia (NH₃) concentration</p>
+            <p class="card-description" id="ammonia-update">
+                Waiting for sensor data...
+            </p>
+        </div>
+
+        <div class="card pink">
+            <h3>Aroma Diffuser Level</h3>
+            <div class="big-value">
+                <span id="aroma-value">--</span>
+                <span class="unit">%</span>
+            </div>
+            <p class="card-description" id="aroma-description">
+                Waiting for sensor data...
+            </p>
+            <div class="progress-track">
+                <div class="progress-fill" id="aroma-progress"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Carbonized Rice Husk</h3>
+            <p class="card-description">Four-day replacement monitoring timer</p>
+            <div class="timer-value" id="carbon-timer">4d 00h 00m</div>
+            <p class="card-description" id="carbon-status">
+                Replacement timer is active.
+            </p>
+            <button class="small-button" id="reset-carbon">
+                Reset Timer
+            </button>
+        </div>
+
+    </section>
+
+    <p class="last-update" id="last-update">
+        Last updated: Not yet updated
+    </p>
+</main>
+
+<footer>
+    &copy; 2026 OdorBot Monitoring System. All Rights Reserved.
+</footer>
+
+<script type="module">
+    import { initializeApp } from 'https://gstatic.com';
+    import { getDatabase, ref, onValue } from 'https://gstatic.com';
+
+    // ==========================================
+    // DASHBOARD ELEMENTS
+    // ==========================================
+
+    const connectionDot = document.getElementById('connection-dot');
+    const connectionText = document.getElementById('connection-text');
+
+    const ammoniaValue = document.getElementById('ammonia-value');
+    const ammoniaStatus = document.getElementById('ammonia-status');
+    const statusDescription = document.getElementById('status-description');
+    const ammoniaUpdate = document.getElementById('ammonia-update');
+
+    const aromaValue = document.getElementById('aroma-value');
+    const aromaDescription = document.getElementById('aroma-description');
+    const aromaProgress = document.getElementById('aroma-progress');
+
+    const lastUpdate = document.getElementById('last-update');
+
+    // ==========================================
+    // AMMONIA SETTINGS
+    // ==========================================
+
+    const AMMONIA_THRESHOLD = 2.0;
+
+    // ==========================================
+    // UPDATE AMMONIA DISPLAY
+    // ==========================================
+
+    function updateAmmoniaReading(value) {
+        const ppm = Number(value);
+
+        if (!Number.isFinite(ppm) || ppm < 0) return;
+
+        ammoniaValue.textContent = ppm.toFixed(1);
+
+        // Matches the Arduino trigger condition: nh3_ppm > 2.0
+        if (ppm > AMMONIA_THRESHOLD) {
+            ammoniaStatus.textContent = 'HIGH LEVEL';
+            ammoniaStatus.className = 'status high';
+            statusDescription.textContent =
+                'Ammonia concentration is above the threshold.';
+        } else {
+            ammoniaStatus.textContent = 'NORMAL LEVEL';
+            ammoniaStatus.className = 'status normal';
+            statusDescription.textContent =
+                'Ammonia concentration is within the set threshold.';
+        }
+
+        const now = new Date();
+
+        ammoniaUpdate.textContent =
+            'Updated at ' + now.toLocaleTimeString();
+
+        lastUpdate.textContent =
+            'Last updated: ' + now.toLocaleString();
+
+        saveReading(ppm);
+    }
+
+    // ==========================================
+    // UPDATE AROMA DIFFUSER LEVEL
+    // ==========================================
+
+    function updateAromaLevel(value) {
+        const level = Number(value);
+
+        if (!Number.isFinite(level) || level < 0 || level > 100) {
+            return;
+        }
+
+        aromaValue.textContent = level.toFixed(0);
+        aromaProgress.style.width = level + '%';
+
+        if (level <= 20) {
+            aromaDescription.textContent = 'Aroma level is low.';
+        } else if (level <= 70) {
+            aromaDescription.textContent = 'Aroma level is moderate.';
+        } else {
+            aromaDescription.textContent = 'Aroma level is high.';
+        }
+    }
+
+    // ==========================================
+    // SAVE AMMONIA READING HISTORY
+    // ==========================================
+
+    const HISTORY_KEY = 'odorbotReadingHistory';
+
+    function saveReading(ppm) {
+        try {
+            let history = JSON.parse(
+                localStorage.getItem(HISTORY_KEY) || '[]'
+            );
+
+            history.push({
+                value: ppm,
+                time: new Date().toISOString()
+            });
+
+            // Keep the latest 500 readings
+            if (history.length > 500) {
+                history = history.slice(-500);
+            }
+
+            localStorage.setItem(
+                HISTORY_KEY,
+                JSON.stringify(history)
+            );
+        } catch (error) {
+            console.error('Could not save reading history:', error);
+        }
+    }
+
+    // ==========================================
+    // CARBONIZED RICE HUSK TIMER
+    // ==========================================
+
+    const CARBON_KEY = 'odorbotCarbonLastChanged';
+    const FOUR_DAYS = 4 * 24 * 60 * 60 * 1000;
+
+    const carbonTimer = document.getElementById('carbon-timer');
+    const carbonStatus = document.getElementById('carbon-status');
+    const resetCarbonButton = document.getElementById('reset-carbon');
+
+    function getCarbonStartTime() {
+        try {
+            let saved = localStorage.getItem(CARBON_KEY);
+
+            if (!saved) {
+                saved = Date.now().toString();
+                localStorage.setItem(CARBON_KEY, saved);
+            }
+
+            const timestamp = Number(saved);
+
+            return Number.isFinite(timestamp) ? timestamp : Date.now();
+        } catch (error) {
+            console.error('Carbon timer storage error:', error);
+            return Date.now();
+        }
+    }
+
+    let carbonStartTime = getCarbonStartTime();
+
+    function updateCarbonTimer() {
+        const elapsed = Date.now() - carbonStartTime;
+        const remaining = Math.max(0, FOUR_DAYS - elapsed);
+
+        const days = Math.floor(remaining / 86400000);
+        const hours = Math.floor((remaining % 86400000) / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+
+        carbonTimer.textContent =
+            `${days}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m`;
+
+        if (remaining <= 0) {
+            carbonStatus.textContent =
+                'Replacement recommended. Please check the carbonized rice husk.';
+        } else {
+            carbonStatus.textContent =
+                'Replacement timer is active.';
+        }
+    }
+
+    resetCarbonButton.addEventListener('click', () => {
+        carbonStartTime = Date.now();
+
+        try {
+            localStorage.setItem(
+                CARBON_KEY,
+                carbonStartTime.toString()
+            );
+        } catch (error) {
+            console.error('Could not reset carbon timer:', error);
+        }
+
+        updateCarbonTimer();
+        alert('Carbonized rice husk timer has been reset.');
+    });
+
+    updateCarbonTimer();
+    setInterval(updateCarbonTimer, 60000);
+
+    // ==========================================
+    // AUTOMATIC FIREBASE CONNECTION (NO BUTTON NEEDED)
+    // ==========================================
+
+    const firebaseConfig = {
+        databaseURL: 'https://odorbot-ea9bb-default-rtdb.firebaseio.com'
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const odorbotRef = ref(db, 'odorbot');
+
+    function setConnectionState(connected) {
+        connectionText.textContent = connected
+            ? 'OdorBot Connected'
+            : 'OdorBot Disconnected';
+
+        connectionDot.classList.toggle('connected', connected);
+    }
+
+    onValue(odorbotRef, (snapshot) => {
+        const data = snapshot.val();
+
+        if (!data) {
+            setConnectionState(false);
+            return;
+        }
+
+        setConnectionState(true);
+
+        if (data.nh3 !== undefined) {
+            updateAmmoniaReading(data.nh3);
+        }
+
+        if (data.aroma !== undefined) {
+            updateAromaLevel(data.aroma);
+        }
+    }, (error) => {
+        console.error('Firebase connection error:', error);
+        setConnectionState(false);
+    });
+</script>
+
+
+</body>
+</html>
