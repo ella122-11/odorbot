@@ -478,8 +478,8 @@
             );
 
             history.push({
-                value: ppm,
-                time: new Date().toISOString()
+                ppm: ppm,
+                timestamp: Date.now()
             });
 
             // Keep the latest 500 readings
@@ -608,6 +608,7 @@
         setConnectionState(false);
     });
 </script>
+
 
 
 </body>
