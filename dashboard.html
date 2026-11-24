@@ -11,6 +11,7 @@
 :root {
     --yellow: #ffe89a;
     --yellow-dark: #f4cb4e;
+    --yellow-soft: #fff9dd;
     --pink: #f8c8d8;
     --pink-dark: #eaa3bd;
     --cream: #fffaf0;
@@ -23,7 +24,9 @@
     --shadow: 0 8px 24px rgba(90, 65, 50, 0.07);
 }
 
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -54,45 +57,51 @@ header {
 }
 
 .header-container {
+    max-width: 1400px;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    flex-wrap: wrap;
 }
 
 .brand {
     display: flex;
     align-items: center;
-    gap: 12px;
-}
-
-.brand img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
+    gap: 14px;
+    flex-shrink: 0;
 }
 
 .brand-icon {
     width: 48px;
     height: 48px;
     background: var(--yellow);
-    border-radius: 16px;
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 25px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.brand-icon img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
 }
 
 .brand h1 {
     font-size: 21px;
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
+    line-height: 1.15;
 }
 
 .brand p {
-    font-size: 11px;
+    font-size: 11.5px;
     color: var(--muted);
+    font-weight: 500;
+    margin-top: 2px;
 }
 
 /* ================= NAVIGATION ================= */
@@ -100,7 +109,7 @@ header {
 nav {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
 .nav-btn {
@@ -113,14 +122,20 @@ nav {
     background: transparent;
     color: var(--muted);
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13.5px;
+    white-space: nowrap;
     transition: 0.2s;
 }
 
-.nav-btn:hover,
+.nav-btn:hover {
+    background: var(--yellow-soft);
+    color: var(--text);
+}
+
 .nav-btn.active {
     background: var(--yellow);
     color: var(--text);
+    font-weight: 700;
 }
 
 /* ================= DATE & TIME ================= */
@@ -130,24 +145,28 @@ nav {
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
-    padding: 8px 14px;
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    min-width: 190px;
+    padding: 10px 16px;
+    background: var(--yellow-soft);
+    border: 1px solid #f4e6b3;
+    border-radius: 14px;
+    min-width: 205px;
+    flex-shrink: 0;
 }
 
 .datetime-time {
     font-size: 17px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--text);
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
 }
 
 .datetime-date {
     font-size: 11px;
     font-weight: 500;
     color: var(--muted);
+    margin-top: 2px;
 }
 
 /* ================= MAIN ================= */
@@ -274,6 +293,7 @@ main {
     font-weight: 800;
     margin-top: 8px;
     letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
 }
 
 .metric-unit {
@@ -333,6 +353,7 @@ main {
     font-weight: 800;
     color: #a65277;
     margin: 10px 0;
+    font-variant-numeric: tabular-nums;
 }
 
 .timer-caption {
@@ -424,6 +445,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: 12px;
+    font-variant-numeric: tabular-nums;
 }
 
 th, td {
@@ -471,6 +493,16 @@ footer {
 
 /* ================= RESPONSIVE ================= */
 
+@media (max-width: 960px) {
+    .header-container {
+        flex-wrap: wrap;
+    }
+
+    .datetime-container {
+        margin-left: auto;
+    }
+}
+
 @media (max-width: 900px) {
     .span-8, .span-6, .span-4 {
         grid-column: span 12;
@@ -478,10 +510,6 @@ footer {
 
     main {
         padding: 25px 4%;
-    }
-
-    .datetime-container {
-        margin-left: auto;
     }
 }
 
@@ -509,6 +537,7 @@ footer {
     .datetime-container {
         align-items: center;
         min-width: 100%;
+        margin-left: 0;
     }
 
     .page-heading h2 {
@@ -536,8 +565,9 @@ footer {
     <div class="header-container">
 
         <div class="brand">
-            <img src="logo.png" alt="OdorBot Logo"
-                 onerror="this.style.display='none'">
+            <div class="brand-icon">
+                <img src="logo.png" alt="OdorBot Logo" onerror="this.style.display='none'">
+            </div>
 
             <div>
                 <h1>ODORBOT</h1>
@@ -545,13 +575,12 @@ footer {
             </div>
         </div>
 
-        <!-- NAVIGATION TO SEPARATE HTML FILES -->
         <nav>
-            <a href="index.html" class="nav-btn active">
+            <a href="index.html" class="nav-btn">
                 Home
             </a>
 
-            <a href="dashboard.html" class="nav-btn">
+            <a href="dashboard.html" class="nav-btn active">
                 Dashboard
             </a>
 
@@ -560,7 +589,6 @@ footer {
             </a>
         </nav>
 
-        <!-- LIVE DATE AND TIME -->
         <div class="datetime-container">
             <div id="currentTime" class="datetime-time">
                 --:--:--
@@ -578,7 +606,7 @@ footer {
 
 <!-- ================= HOME PAGE ================= -->
 
-<section id="home" class="page active">
+<section id="home" class="page">
 
     <div class="page-heading">
         <h2>Welcome to OdorBot</h2>
@@ -697,7 +725,7 @@ footer {
 
 <!-- ================= DASHBOARD PAGE SECTION ================= -->
 
-<section id="dashboard" class="page">
+<section id="dashboard" class="page active">
 
     <div class="page-heading">
         <h2>Monitoring Dashboard</h2>
@@ -925,6 +953,7 @@ function updateDateTime() {
     const now = new Date();
 
     const time = now.toLocaleTimeString("en-PH", {
+        timeZone: "Asia/Manila",
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
@@ -932,6 +961,7 @@ function updateDateTime() {
     });
 
     const date = now.toLocaleDateString("en-PH", {
+        timeZone: "Asia/Manila",
         weekday: "long",
         year: "numeric",
         month: "long",
@@ -949,6 +979,9 @@ function updateDateTime() {
         dateElement.textContent = date;
     }
 }
+
+updateDateTime();
+setInterval(updateDateTime, 1000);
 
 // =====================================================
 // NAVIGATION
@@ -1060,7 +1093,6 @@ function updateAmmoniaStatus(nh3) {
         ? "Ammonia exceeds the configured prototype threshold."
         : "Ammonia level is below the configured prototype threshold.";
 
-    // HOME
     document.getElementById("homeStatus").textContent =
         high ? "Elevated Ammonia" : "Normal";
 
@@ -1072,7 +1104,6 @@ function updateAmmoniaStatus(nh3) {
     document.getElementById("homeStatusPill").className =
         high ? "status-pill high" : "status-pill";
 
-    // DASHBOARD
     document.getElementById("dashboardStatus").textContent =
         high ? "Elevated Ammonia" : "Normal";
 
@@ -1323,7 +1354,7 @@ function renderHistoryTable() {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${date.toLocaleString()}</td>
+            <td>${date.toLocaleString("en-PH", { timeZone: "Asia/Manila" })}</td>
             <td>${Number(entry.nh3).toFixed(1)}</td>
             <td>${Math.round(Number(entry.aroma))}%</td>
             <td>
@@ -1386,6 +1417,15 @@ function updateAnalytics() {
         lowest.toFixed(1) + " ppm";
 }
 
+function clearHistory() {
+    historyData = [];
+    saveHistory();
+    renderHistoryTable();
+    updateAnalytics();
+    drawChart("dashboardChart");
+    drawChart("analyticsChart");
+}
+
 // =====================================================
 // CHART
 // =====================================================
@@ -1446,64 +1486,48 @@ function drawChart(canvasId) {
     const chartWidth = width - paddingLeft - paddingRight;
     const chartHeight = height - paddingTop - paddingBottom;
 
-    // Grid
-    ctx.strokeStyle = "#eee5dc";
+    ctx.strokeStyle = "#eee4d8";
     ctx.lineWidth = 1;
+    ctx.font = "11px Poppins";
+    ctx.fillStyle = "#8b817b";
+    ctx.textAlign = "right";
 
-    for (let i = 0; i <= 4; i++) {
-
-        const y = paddingTop + chartHeight * (i / 4);
+    const ticks = 4;
+    for (let i = 0; i <= ticks; i++) {
+        const val = min + ((max - min) / ticks) * i;
+        const y = paddingTop + chartHeight - (i / ticks) * chartHeight;
 
         ctx.beginPath();
         ctx.moveTo(paddingLeft, y);
         ctx.lineTo(width - paddingRight, y);
         ctx.stroke();
 
-        const value = max - (max * i / 4);
-
-        ctx.fillStyle = "#9b9189";
-        ctx.font = "10px Poppins";
-        ctx.textAlign = "right";
-
-        ctx.fillText(
-            value.toFixed(1),
-            paddingLeft - 8,
-            y + 4
-        );
+        ctx.fillText(val.toFixed(1), paddingLeft - 8, y + 4);
     }
 
-    // Threshold line
-    const thresholdY =
-        paddingTop + chartHeight -
-        (AMMONIA_THRESHOLD / max) * chartHeight;
+    const thresholdY = paddingTop + chartHeight -
+        ((AMMONIA_THRESHOLD - min) / (max - min)) * chartHeight;
 
-    ctx.setLineDash([5, 5]);
+    ctx.save();
     ctx.strokeStyle = "#e16e6e";
-
+    ctx.setLineDash([6, 5]);
     ctx.beginPath();
     ctx.moveTo(paddingLeft, thresholdY);
     ctx.lineTo(width - paddingRight, thresholdY);
     ctx.stroke();
+    ctx.restore();
 
-    ctx.setLineDash([]);
-
-    // Ammonia line
+    ctx.strokeStyle = "#e7b54d";
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
 
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = "#e7b54d";
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-
-    values.forEach((value, index) => {
-
-        const x = paddingLeft +
-            (index / (values.length - 1)) * chartWidth;
-
+    data.forEach((entry, idx) => {
+        const x = paddingLeft + (idx / (data.length - 1)) * chartWidth;
+        const clamped = Math.max(min, Math.min(max, Number(entry.nh3)));
         const y = paddingTop + chartHeight -
-            (value / max) * chartHeight;
+            ((clamped - min) / (max - min)) * chartHeight;
 
-        if (index === 0) {
+        if (idx === 0) {
             ctx.moveTo(x, y);
         } else {
             ctx.lineTo(x, y);
@@ -1511,112 +1535,14 @@ function drawChart(canvasId) {
     });
 
     ctx.stroke();
-
-    // Points
-    values.forEach((value, index) => {
-
-        const x = paddingLeft +
-            (index / (values.length - 1)) * chartWidth;
-
-        const y = paddingTop + chartHeight -
-            (value / max) * chartHeight;
-
-        ctx.beginPath();
-        ctx.arc(x, y, 3.5, 0, Math.PI * 2);
-
-        ctx.fillStyle = "#e7b54d";
-        ctx.fill();
-    });
-
-    // X-axis labels
-    ctx.fillStyle = "#9b9189";
-    ctx.font = "10px Poppins";
-    ctx.textAlign = "center";
-
-    const first = new Date(data[0].timestamp);
-    const last = new Date(data[data.length - 1].timestamp);
-
-    ctx.fillText(
-        first.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit"
-        }),
-        paddingLeft,
-        height - 8
-    );
-
-    ctx.fillText(
-        last.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit"
-        }),
-        width - paddingRight,
-        height - 8
-    );
 }
 
-// =====================================================
-// CLEAR HISTORY
-// =====================================================
-
-function clearHistory() {
-
-    const confirmClear = confirm(
-        "Are you sure you want to clear all stored reading history?"
-    );
-
-    if (!confirmClear) return;
-
-    historyData = [];
-
-    localStorage.removeItem(HISTORY_KEY);
-
-    renderHistoryTable();
-    updateAnalytics();
-
-    drawChart("dashboardChart");
-    drawChart("analyticsChart");
-}
-
-// =====================================================
-// RESIZE CHARTS
-// =====================================================
-
-window.addEventListener("resize", () => {
-
-    drawChart("dashboardChart");
-    drawChart("analyticsChart");
-
-});
-
-// =====================================================
-// INITIALIZATION
-// =====================================================
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    // Initialize live date and time
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
-
-    renderHistoryTable();
-
-    updateAnalytics();
-
-    updateHuskTimer();
-
-    // Update timer every second
-    setInterval(updateHuskTimer, 1000);
-
-    // Start Firebase polling
-    startFirebaseMonitoring();
-
-    // Draw initial charts
-    drawChart("dashboardChart");
-    drawChart("analyticsChart");
-
-});
-
+updateHuskTimer();
+setInterval(updateHuskTimer, 1000);
+renderHistoryTable();
+updateAnalytics();
+drawChart("dashboardChart");
+startFirebaseMonitoring();
 </script>
 
 </body>
