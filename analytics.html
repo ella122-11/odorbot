@@ -735,27 +735,42 @@ let fetchInProgress = false;
 // DATE & TIME
 // =====================================================
 
-function updateDateTime() {
+// ===============================
+// PHILIPPINE DATE AND TIME
+// ===============================
 
+function updateDateTime() {
     const now = new Date();
 
-    const time = now.toLocaleTimeString("en-PH", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true
-    });
+    const timeElement = document.getElementById("currentTime");
+    const dateElement = document.getElementById("currentDate");
 
-    const date = now.toLocaleDateString("en-PH", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric"
-    });
+    if (timeElement) {
+        timeElement.textContent = now.toLocaleTimeString("en-PH", {
+            timeZone: "Asia/Manila",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true
+        });
+    }
 
-    document.getElementById("currentTime").textContent = time;
-    document.getElementById("currentDate").textContent = date;
+    if (dateElement) {
+        dateElement.textContent = now.toLocaleDateString("en-PH", {
+            timeZone: "Asia/Manila",
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric"
+        });
+    }
 }
+
+// Display immediately upon loading
+updateDateTime();
+
+// Update every second
+setInterval(updateDateTime, 1000);
 
 // =====================================================
 // LOCAL CACHE
