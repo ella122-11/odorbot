@@ -1,334 +1,603 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="icon" type="image/png" href="logo.png"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="icon" type="image/png" href="logo.png"/>
 
-    <title>OdorBot Monitoring Website</title>
+<title>OdorBot Monitoring Website</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-    <style>
-        :root {
-            --brand-yellow: #fff86b;
-            --brand-pink: #f3aaa1;
-            --brand-pink-dark: #e59990;
-            --brand-black: #000000;
-            --bg-main: #f5f5f5;
-            --card-bg: #f3aaa1;
-            --text-main: #000000;
-            --text-muted: #333333;
-            --border-color: #000000;
-            --radius-lg: 12px;
-            --radius-md: 8px;
+:root {
+    --yellow: #ffe89a;
+    --yellow-dark: #f4cb4e;
+    --yellow-soft: #fff9dd;
+    --pink: #f8c8d8;
+    --pink-dark: #eaa3bd;
+    --pink-soft: #fce8f0;
+    --cream: #fffaf0;
+    --white: #ffffff;
+    --text: #443c39;
+    --muted: #8b817b;
+    --green: #39a875;
+    --red: #e16e6e;
+    --border: #eee4d8;
+    --shadow: 0 8px 24px rgba(90, 65, 50, 0.07);
+}
 
-            --danger-main: #dc2626;
-            --danger-bg: #fef2f2;
-            --danger-border: #fca5a5;
-            --success-main: #15803d;
-            --success-bg: #f0fdf4;
-            --success-border: #86efac;
-        }
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        * {
-            box-sizing: border-box;
-        }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-        html, body {
-            min-height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: "Poppins", sans-serif;
-            color: var(--text-main);
-            background: var(--bg-main);
-            -webkit-font-smoothing: antialiased;
-        }
+body.splash-active {
+    overflow: hidden;
+}
 
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+}
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--brand-yellow);
-            padding: 14px 3%;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            border-bottom: 2px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-        }
+/* ================= SPLASH SCREEN ================= */
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
+.splash-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: radial-gradient(circle at top, #fffdf7 0%, var(--cream) 65%, #fff4dc 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.55s ease;
+}
 
-        .logo-circle {
-            width: 48px;
-            height: 48px;
-            background: url("logo.png") no-repeat center/contain;
-            background-color: #ffffff;
-            border-radius: 50%;
-            flex-shrink: 0;
-            border: 1px solid var(--border-color);
-        }
+.splash-screen.is-hiding {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
 
-        .logo h1 {
-            margin: 0;
-            font-size: 1.25rem;
-            color: var(--text-main);
-            font-weight: 800;
-            letter-spacing: -0.01em;
-        }
+.splash-screen.is-hidden {
+    display: none;
+}
 
-        .logo p {
-            margin: 2px 0 0;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
+.splash-card {
+    position: relative;
+    max-width: 440px;
+    width: 100%;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 36px 32px 30px;
+    box-shadow: 0 20px 50px rgba(90, 65, 50, 0.1);
+    text-align: center;
+    animation: splashEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
+@keyframes splashEnter {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
 
-        nav a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 0.95rem;
-            padding: 6px 12px;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-        }
+.splash-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--yellow-soft);
+    border: 1px solid #f2e3a6;
+    color: #7c6228;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+}
 
-        nav a:hover {
-            color: #bd648e;
-            background: rgba(0,0,0,0.04);
-        }
+.splash-logo-wrap {
+    width: 92px;
+    height: 92px;
+    margin: 0 auto 18px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #fff0bd, var(--yellow));
+    border: 1px solid #f0da86;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 24px rgba(244, 203, 78, 0.25);
+    animation: gentleFloat 2.8s ease-in-out infinite;
+}
 
-        nav a.active {
-            color: #bd648e;
-            border-bottom: 2px solid #bd648e;
-            border-radius: 0;
-        }
+@keyframes gentleFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
 
-        .page {
-            max-width: 1120px;
-            width: 90%;
-            margin: 40px auto;
-            padding: 40px;
-            background: var(--card-bg); /* Pink container */
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+.splash-logo-wrap img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
 
-            display: grid;
-            grid-template-columns: 1fr 240px;
-            grid-template-areas:
-                "intro logo"
-                "features features";
+.splash-title {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--text);
+    line-height: 1.2;
+}
 
-            column-gap: 48px;
-            row-gap: 40px;
+.splash-subtitle {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+}
 
-            animation: fadeIn 0.5s ease;
-        }
+.splash-progress-track {
+    width: 100%;
+    height: 7px;
+    background: #f5ece0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 24px 0 12px;
+}
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+.splash-progress-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--yellow-dark), var(--pink-dark));
+    transition: width 2.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
-        .intro {
-            grid-area: intro;
-        }
+.splash-screen.is-loaded .splash-progress-bar {
+    width: 100%;
+}
 
-        .intro h2 {
-            margin: 0 0 12px;
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            color: var(--text-main);
-        }
+.splash-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11.5px;
+    color: var(--muted);
+}
 
-        .intro p {
-            margin: 0;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #222222;
-        }
+/* ================= HEADER ================= */
 
-        .about-image {
-            grid-area: logo;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 8px;
-            border: 1px dashed var(--border-color);
-            padding: 16px;
-        }
+header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 5%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-        .about-image img {
-            width: 100%;
-            max-width: 160px;
-            height: auto;
-            object-fit: contain;
-            mix-blend-mode: multiply;
-        }
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
 
-        .features {
-            grid-area: features;
-            display: grid;
-            grid-template-columns: 1fr 1.25fr;
-            align-items: center;
-            gap: 48px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 40px;
-        }
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
 
-        .picture-holder {
-            width: 100%;
-            height: 220px;
-            background: #cbd5df;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid var(--border-color);
-        }
+.brand-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--yellow);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
 
-        .feature-content h2 {
-            margin: 0 0 12px;
-            font-size: 1.6rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            color: var(--text-main);
-        }
+.brand-icon img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+}
 
-        .feature-content p {
-            margin: 0;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: #222222;
-        }
+.brand h1 {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    line-height: 1.15;
+}
 
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-        }
+.brand p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+}
 
-        .menu-toggle span {
-            width: 24px;
-            height: 2px;
-            background: var(--text-main);
-            border-radius: 2px;
-            transition: 0.3s;
-        }
+/* ================= NAVIGATION ================= */
 
-        footer {
-            text-align: center;
-            color: #555555;
-            font-size: 0.85rem;
-            margin-top: auto;
-            padding: 24px 0;
-            border-top: 1px solid #e2e8f0;
-            background: #ffffff;
-        }
+nav.primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-        @media (max-width: 850px) {
-            .page {
-                grid-template-columns: 1fr 180px;
-                column-gap: 24px;
-                padding: 30px;
-            }
-        }
+.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
 
-        @media (max-width: 680px) {
-            .menu-toggle {
-                display: flex;
-            }
+.nav-btn:hover,
+.nav-btn.active {
+    background: var(--yellow);
+    color: var(--text);
+}
 
-            nav.primary {
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background: var(--brand-yellow);
-                display: none;
-                flex-direction: column;
-                gap: 0;
-                border-bottom: 1px solid var(--border-color);
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            }
+/* ================= DATE & TIME ================= */
 
-            nav.primary.show {
-                display: flex;
-            }
+.datetime-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 8px 14px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-width: 195px;
+    flex-shrink: 0;
+}
 
-            nav.primary a {
-                width: 100%;
-                padding: 16px 24px;
-                border-bottom: 1px solid rgba(0,0,0,0.1);
-            }
+.datetime-time {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.5px;
+    font-variant-numeric: tabular-nums;
+}
 
-            .page {
-                width: 95%;
-                margin: 20px auto;
-                padding: 24px;
-                grid-template-columns: 1fr;
-                grid-template-areas:
-                    "intro"
-                    "logo"
-                    "features";
-                gap: 24px;
-            }
+.datetime-date {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+}
 
-            .features {
-                grid-template-columns: 1fr;
-                gap: 24px;
-                padding-top: 24px;
-            }
+/* ================= MOBILE MENU ================= */
 
-            .about-image {
-                max-width: 200px;
-                margin: 0 auto;
-            }
-        }
-    </style>
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 42px;
+    height: 42px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.menu-toggle span {
+    width: 20px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* ================= MAIN ================= */
+
+main {
+    max-width: 1400px;
+    width: 100%;
+    padding: 30px 5%;
+    margin: 0 auto;
+    flex: 1;
+}
+
+.page-heading {
+    margin-bottom: 24px;
+}
+
+.page-heading h2 {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.page-heading p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 6px;
+}
+
+/* ================= GRID & CARDS ================= */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+.card {
+    background: var(--white);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(238, 228, 216, 0.75);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.span-12 { grid-column: span 12; }
+.span-8  { grid-column: span 8; }
+.span-7  { grid-column: span 7; }
+.span-6  { grid-column: span 6; }
+.span-5  { grid-column: span 5; }
+.span-4  { grid-column: span 4; }
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.card-title h3 {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.card-title span {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.status-card {
+    background: linear-gradient(135deg, #fff0bd, #ffe49a);
+}
+
+.ammonia-card {
+    background: #fff4f5;
+}
+
+.aroma-card {
+    background: var(--yellow-soft);
+}
+
+.timer-card {
+    background: var(--pink-soft);
+}
+
+.big-heading {
+    font-size: 26px;
+    font-weight: 800;
+    margin: 2px 0 12px;
+    line-height: 1.2;
+}
+
+.section-heading {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 2px 0 12px;
+    line-height: 1.25;
+}
+
+.body-copy {
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.7;
+}
+
+.status-card .body-copy {
+    color: #76684f;
+}
+
+.logo-showcase {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    background: var(--cream);
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.logo-showcase img {
+    max-width: 148px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.picture-holder {
+    flex: 1;
+    width: 100%;
+    min-height: 210px;
+    background: var(--white);
+    border: 1px dashed var(--yellow-dark);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #76684f;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 18px;
+    text-align: center;
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    padding: 24px 5%;
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 960px) {
+    .span-8,
+    .span-7,
+    .span-6,
+    .span-5,
+    .span-4 {
+        grid-column: span 12;
+    }
+
+    main {
+        padding: 25px 4%;
+    }
+}
+
+@media (max-width: 680px) {
+    .menu-toggle {
+        display: flex;
+    }
+
+    nav.primary {
+        display: none;
+        order: 4;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+    }
+
+    nav.primary.show {
+        display: flex;
+    }
+
+    nav.primary .nav-btn {
+        justify-content: flex-start;
+        width: 100%;
+        padding: 10px 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .datetime-container {
+        order: 3;
+        align-items: center;
+        min-width: 100%;
+    }
+
+    .page-heading h2,
+    .big-heading {
+        font-size: 23px;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .splash-card {
+        padding: 28px 22px 24px;
+        border-radius: 22px;
+    }
+}
+</style>
 </head>
-<body>
-    <header role="banner">
-        <div class="logo">
-            <div class="logo-circle"></div>
+
+<body class="splash-active">
+
+<!-- ================= SPLASH SCREEN ================= -->
+
+<div id="splashScreen" class="splash-screen" role="dialog" aria-modal="true" aria-label="OdorBot Loading Screen">
+    <div class="splash-card">
+        <div class="splash-badge">Smart Odor Monitoring</div>
+
+        <div class="splash-logo-wrap">
+            <img src="logo.png" alt="OdorBot Logo" onerror="this.style.display='none'">
+        </div>
+
+        <div class="splash-title">ODORBOT</div>
+        <p class="splash-subtitle">
+            Initializing restroom ammonia monitoring &amp; odor control workspace...
+        </p>
+
+        <div class="splash-progress-track">
+            <div class="splash-progress-bar"></div>
+        </div>
+
+        <div class="splash-meta">
+            <span id="splashStatus">Preparing interface</span>
+        </div>
+    </div>
+</div>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+    <div class="header-container">
+
+        <div class="brand">
+            <div class="brand-icon">
+                <img src="logo.png" alt="OdorBot Logo" onerror="this.style.display='none'">
+            </div>
+
             <div>
-                <h1>OdorBot Monitoring</h1>
-                <p>Air Quality & Odor Tracking</p>
+                <h1>ODORBOT</h1>
+                <p>Monitoring System</p>
             </div>
         </div>
 
@@ -338,55 +607,175 @@
             <span></span>
         </button>
 
-        <nav class="primary" role="navigation" aria-label="Main Navigation">
-            <a href="home.html" class="active">Home</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="analytics.html">Analytics</a>
+        <nav class="primary" aria-label="Main Navigation">
+            <a href="home.html" class="nav-btn active">Home</a>
+            <a href="dashboard.html" class="nav-btn">Dashboard</a>
+            <a href="analytics.html" class="nav-btn">Usage Analytics</a>
         </nav>
-    </header>
 
-    <main class="page" role="main">
-        <section class="intro">
-            <h2>OdorBot System</h2>
-            <p>
-               Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here.
-            </p>
-        </section>
-
-        <div class="about-image">
-            <img src="logo.png" alt="OdorBot Logo">
+        <div class="datetime-container">
+            <div id="currentTime" class="datetime-time">--:--:--</div>
+            <div id="currentDate" class="datetime-date">Loading date...</div>
         </div>
 
-        <section class="features">
+    </div>
+</header>
+
+<main>
+
+    <div class="page-heading">
+        <h2>Welcome to OdorBot</h2>
+        <p>Smart restroom ammonia monitoring and odor management system.</p>
+    </div>
+
+    <div class="grid">
+
+        <div class="card span-8 status-card">
+            <div class="card-title">
+                <h3>OdorBot System</h3>
+                <span>Overview</span>
+            </div>
+
+            <h2 class="big-heading">OdorBot System</h2>
+
+            <p class="body-copy">
+                Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here.
+            </p>
+        </div>
+
+        <div class="card span-4">
+            <div class="card-title">
+                <h3>System Emblem</h3>
+                <span>OdorBot</span>
+            </div>
+
+            <div class="logo-showcase">
+                <img src="logo.png" alt="OdorBot Logo" onerror="this.style.display='none'">
+            </div>
+        </div>
+
+        <div class="card span-5 aroma-card">
+            <div class="card-title">
+                <h3>Feature Preview</h3>
+                <span>Visual</span>
+            </div>
+
             <div class="picture-holder" aria-label="Picture placeholder">
                 <span>Feature Preview Graphic</span>
             </div>
-
-            <div class="feature-content">
-                <h2>Key Features</h2>
-                <p>
-                    Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here.
-                </p>
-            </div>
-        </section>
-    </main>
-
-    <footer role="contentinfo">
-        <div>
-            &copy; <span id="year"></span> OdorBot Monitoring Website. All Rights Reserved.
         </div>
-    </footer>
 
-    <script>
-        const toggleBtn = document.querySelector('.menu-toggle');
-        const nav = document.querySelector('nav.primary');
+        <div class="card span-7 timer-card">
+            <div class="card-title">
+                <h3>Capabilities</h3>
+                <span>Key Features</span>
+            </div>
 
-        toggleBtn.addEventListener('click', () => {
-            const isOpen = nav.classList.toggle('show');
-            toggleBtn.setAttribute('aria-expanded', isOpen);
+            <h2 class="section-heading">Key Features</h2>
+
+            <p class="body-copy">
+                Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here.
+            </p>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    ODORBOT MONITORING SYSTEM &bull; Smart Odor Monitoring
+</footer>
+
+<script>
+// ================= SPLASH SCREEN =================
+(function initSplash() {
+    const splash = document.getElementById("splashScreen");
+    const statusText = document.getElementById("splashStatus");
+    const SPLASH_SEEN_KEY = "odorbot_splash_seen";
+
+    if (!splash) return;
+
+    if (sessionStorage.getItem(SPLASH_SEEN_KEY) === "1") {
+        splash.classList.add("is-hidden");
+        document.body.classList.remove("splash-active");
+        return;
+    }
+
+    let dismissed = false;
+
+    function dismissSplash() {
+        if (dismissed) return;
+        dismissed = true;
+        sessionStorage.setItem(SPLASH_SEEN_KEY, "1");
+        splash.classList.add("is-hiding");
+        document.body.classList.remove("splash-active");
+
+        setTimeout(() => {
+            splash.classList.add("is-hidden");
+        }, 560);
+    }
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            splash.classList.add("is-loaded");
         });
-        document.getElementById('year').textContent = new Date().getFullYear();
-    </script>
+    });
+
+    setTimeout(() => {
+        if (statusText && !dismissed) {
+            statusText.textContent = "Opening OdorBot...";
+        }
+    }, 1500);
+
+    setTimeout(() => {
+        dismissSplash();
+    }, 3000);
+})();
+
+// ================= MOBILE MENU =================
+const toggleBtn = document.querySelector(".menu-toggle");
+const nav = document.querySelector("nav.primary");
+
+toggleBtn.addEventListener("click", () => {
+    const isOpen = nav.classList.toggle("show");
+    toggleBtn.setAttribute("aria-expanded", isOpen);
+});
+
+// ================= PHILIPPINE DATE & TIME =================
+function updateDateTime() {
+    const now = new Date();
+
+    const time = now.toLocaleTimeString("en-PH", {
+        timeZone: "Asia/Manila",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+    });
+
+    const date = now.toLocaleDateString("en-PH", {
+        timeZone: "Asia/Manila",
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+    });
+
+    const timeElement = document.getElementById("currentTime");
+    const dateElement = document.getElementById("currentDate");
+
+    if (timeElement) {
+        timeElement.textContent = time;
+    }
+
+    if (dateElement) {
+        dateElement.textContent = date;
+    }
+}
+
+updateDateTime();
+setInterval(updateDateTime, 1000);
+</script>
 
 </body>
 </html>
