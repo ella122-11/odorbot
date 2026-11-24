@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link rel="icon" type="image/png" href="logo.png"/>
 
-<title>OdorBot Monitoring Website</title>
+<title>OdorBot Monitoring System — Sign In</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
@@ -13,16 +13,16 @@
 :root {
     --yellow: #ffe89a;
     --yellow-dark: #f4cb4e;
-    --yellow-soft: #fff9dd;
     --pink: #f8c8d8;
     --pink-dark: #eaa3bd;
-    --pink-soft: #fce8f0;
     --cream: #fffaf0;
     --white: #ffffff;
     --text: #443c39;
     --muted: #8b817b;
     --green: #39a875;
+    --green-soft: #e4f6ec;
     --red: #e16e6e;
+    --red-soft: #fff0f0;
     --border: #eee4d8;
     --shadow: 0 8px 24px rgba(90, 65, 50, 0.07);
 }
@@ -48,8 +48,12 @@ body.splash-active {
     overflow: hidden;
 }
 
-button {
+button,
+input {
     font-family: inherit;
+}
+
+button {
     cursor: pointer;
     border: none;
 }
@@ -81,7 +85,6 @@ button {
 }
 
 .splash-card {
-    position: relative;
     max-width: 440px;
     width: 100%;
     background: var(--white);
@@ -108,7 +111,7 @@ button {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--yellow-soft);
+    background: #fff9dd;
     border: 1px solid #f2e3a6;
     color: #7c6228;
     font-size: 11px;
@@ -218,7 +221,6 @@ header {
     display: flex;
     align-items: center;
     gap: 12px;
-    flex-shrink: 0;
 }
 
 .brand-icon {
@@ -243,45 +245,12 @@ header {
     font-size: 21px;
     font-weight: 800;
     letter-spacing: 1px;
-    line-height: 1.15;
 }
 
 .brand p {
     font-size: 11px;
     color: var(--muted);
-    margin-top: 2px;
 }
-
-/* ================= NAVIGATION ================= */
-
-nav.primary {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.nav-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    padding: 10px 18px;
-    border-radius: 12px;
-    background: transparent;
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 14px;
-    white-space: nowrap;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.nav-btn:hover,
-.nav-btn.active {
-    background: var(--yellow);
-    color: var(--text);
-}
-
-/* ================= DATE & TIME ================= */
 
 .datetime-container {
     display: flex;
@@ -292,8 +261,7 @@ nav.primary {
     background: var(--cream);
     border: 1px solid var(--border);
     border-radius: 12px;
-    min-width: 195px;
-    flex-shrink: 0;
+    min-width: 190px;
 }
 
 .datetime-time {
@@ -310,182 +278,168 @@ nav.primary {
     color: var(--muted);
 }
 
-/* ================= MOBILE MENU ================= */
-
-.menu-toggle {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    width: 42px;
-    height: 42px;
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    flex-shrink: 0;
-}
-
-.menu-toggle span {
-    width: 20px;
-    height: 2px;
-    background: var(--text);
-    border-radius: 2px;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-/* ================= MAIN ================= */
+/* ================= MAIN & SIGN-IN CARD ================= */
 
 main {
-    max-width: 1400px;
+    max-width: 540px;
     width: 100%;
-    padding: 30px 5%;
-    margin: 0 auto;
+    padding: 36px 5%;
+    margin: auto;
     flex: 1;
-}
-
-.page-heading {
-    margin-bottom: 24px;
-}
-
-.page-heading h2 {
-    font-size: 28px;
-    font-weight: 800;
-    line-height: 1.2;
-}
-
-.page-heading p {
-    color: var(--muted);
-    font-size: 14px;
-    margin-top: 6px;
-}
-
-/* ================= GRID & CARDS ================= */
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 20px;
-    align-items: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card {
+    width: 100%;
     background: var(--white);
     border-radius: 22px;
-    padding: 24px;
+    padding: 30px;
     box-shadow: var(--shadow);
-    border: 1px solid rgba(238, 228, 216, 0.75);
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
+    border: 1px solid rgba(238, 228, 216, 0.7);
 }
 
-.span-12 { grid-column: span 12; }
-.span-8  { grid-column: span 8; }
-.span-7  { grid-column: span 7; }
-.span-6  { grid-column: span 6; }
-.span-5  { grid-column: span 5; }
-.span-4  { grid-column: span 4; }
+.signin-header h2 {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
 
-.card-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
+.signin-header p {
+    font-size: 13.5px;
+    color: var(--muted);
+    margin-bottom: 22px;
+}
+
+.form-group {
     margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    color: var(--text);
+    font-size: 13.5px;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    background: var(--white);
+    border-color: var(--yellow-dark);
+    box-shadow: 0 0 0 3px rgba(244, 203, 78, 0.22);
+}
+
+.form-control.has-toggle {
+    padding-right: 68px;
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 8px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 11.5px;
+    font-weight: 700;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+    background: #fff9dd;
+    color: var(--text);
+}
+
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--muted);
     flex-wrap: wrap;
 }
 
-.card-title h3 {
-    font-size: 15px;
-    font-weight: 700;
+.remember-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
 }
 
-.card-title span {
+.remember-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #d9a726;
+    cursor: pointer;
+}
+
+.signin-btn {
+    width: 100%;
+    padding: 13px 18px;
+    border-radius: 14px;
+    background: var(--pink);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 700;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.signin-btn:hover {
+    background: var(--pink-dark);
+    transform: translateY(-1px);
+}
+
+.alert-box {
+    padding: 12px 14px;
+    border-radius: 12px;
     font-size: 12px;
-    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 16px;
+    display: none;
 }
 
-.status-card {
-    background: linear-gradient(135deg, #fff0bd, #ffe49a);
+.alert-box.show {
+    display: block;
 }
 
-.ammonia-card {
-    background: #fff4f5;
+.alert-box.error {
+    background: var(--red-soft);
+    border: 1px solid #f4c7c7;
+    color: #b64b4b;
 }
 
-.aroma-card {
-    background: var(--yellow-soft);
-}
-
-.timer-card {
-    background: var(--pink-soft);
-}
-
-.big-heading {
-    font-size: 26px;
-    font-weight: 800;
-    margin: 2px 0 12px;
-    line-height: 1.2;
-}
-
-.section-heading {
-    font-size: 20px;
-    font-weight: 700;
-    margin: 2px 0 12px;
-    line-height: 1.25;
-}
-
-.body-copy {
-    color: var(--muted);
-    font-size: 13.5px;
-    line-height: 1.7;
-}
-
-.status-card .body-copy {
-    color: #76684f;
-}
-
-.logo-showcase {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 180px;
-    background: var(--cream);
-    border: 1px dashed var(--border);
-    border-radius: 16px;
-    padding: 20px;
-}
-
-.logo-showcase img {
-    max-width: 148px;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-}
-
-.picture-holder {
-    flex: 1;
-    width: 100%;
-    min-height: 210px;
-    background: var(--white);
-    border: 1px dashed var(--yellow-dark);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #76684f;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 18px;
-    text-align: center;
+.alert-box.success {
+    background: var(--green-soft);
+    border: 1px solid #bfe8d3;
+    color: #248558;
 }
 
 /* ================= FOOTER ================= */
 
 footer {
-    padding: 24px 5%;
+    padding: 25px;
     text-align: center;
     font-size: 11px;
     color: var(--muted);
@@ -493,57 +447,29 @@ footer {
 
 /* ================= RESPONSIVE ================= */
 
-@media (max-width: 960px) {
-    .span-8,
-    .span-7,
-    .span-6,
-    .span-5,
-    .span-4 {
-        grid-column: span 12;
-    }
-
+@media (max-width: 850px) {
     main {
-        padding: 25px 4%;
-    }
-}
-
-@media (max-width: 680px) {
-    .menu-toggle {
-        display: flex;
-    }
-
-    nav.primary {
-        display: none;
-        order: 4;
-        width: 100%;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px;
-        padding-top: 8px;
-        border-top: 1px solid var(--border);
-    }
-
-    nav.primary.show {
-        display: flex;
-    }
-
-    nav.primary .nav-btn {
-        justify-content: flex-start;
-        width: 100%;
-        padding: 10px 14px;
+        padding: 24px 4%;
     }
 }
 
 @media (max-width: 600px) {
+    .header-container {
+        justify-content: center;
+    }
+
+    .brand {
+        width: 100%;
+        justify-content: center;
+    }
+
     .datetime-container {
-        order: 3;
         align-items: center;
         min-width: 100%;
     }
 
-    .page-heading h2,
-    .big-heading {
-        font-size: 23px;
+    .signin-header h2 {
+        font-size: 22px;
     }
 
     .card {
@@ -580,7 +506,7 @@ footer {
         </div>
 
         <div class="splash-meta">
-            <span id="splashStatus">Preparing interface</span>
+            <span id="splashStatus">Preparing sign-in portal</span>
         </div>
     </div>
 </div>
@@ -589,7 +515,6 @@ footer {
 
 <header>
     <div class="header-container">
-
         <div class="brand">
             <div class="brand-icon">
                 <img src="logo.png" alt="OdorBot Logo" onerror="this.style.display='none'">
@@ -601,85 +526,71 @@ footer {
             </div>
         </div>
 
-        <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
-        <nav class="primary" aria-label="Main Navigation">
-            <a href="home.html" class="nav-btn active">Home</a>
-            <a href="dashboard.html" class="nav-btn">Dashboard</a>
-            <a href="analytics.html" class="nav-btn">Usage Analytics</a>
-        </nav>
-
         <div class="datetime-container">
             <div id="currentTime" class="datetime-time">--:--:--</div>
             <div id="currentDate" class="datetime-date">Loading date...</div>
         </div>
-
     </div>
 </header>
 
+<!-- ================= MAIN ================= -->
+
 <main>
-
-    <div class="page-heading">
-        <h2>Welcome to OdorBot</h2>
-        <p>Smart restroom ammonia monitoring and odor management system.</p>
-    </div>
-
-    <div class="grid">
-
-        <div class="card span-8 status-card">
-            <div class="card-title">
-                <h3>OdorBot System</h3>
-                <span>Overview</span>
-            </div>
-
-            <h2 class="big-heading">OdorBot System</h2>
-
-            <p class="body-copy">
-                Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here.
-            </p>
+    <section class="card signin-panel" aria-label="Sign In Form">
+        <div class="signin-header">
+            <h2>Operator Sign In</h2>
+            <p>Sign in to access OdorBot real-time monitoring, controls, and analytics.</p>
         </div>
 
-        <div class="card span-4">
-            <div class="card-title">
-                <h3>System Emblem</h3>
-                <span>OdorBot</span>
+        <div id="signinAlert" class="alert-box" role="alert"></div>
+
+        <form id="signinForm" novalidate>
+            <div class="form-group">
+                <label for="usernameOrEmail">Username or Email</label>
+                <input
+                    type="text"
+                    id="usernameOrEmail"
+                    name="usernameOrEmail"
+                    class="form-control"
+                    placeholder="Enter your username or email"
+                    autocomplete="username"
+                    required
+                >
             </div>
 
-            <div class="logo-showcase">
-                <img src="logo.png" alt="OdorBot Logo" onerror="this.style.display='none'">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrap">
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control has-toggle"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+                    <button
+                        type="button"
+                        id="togglePasswordBtn"
+                        class="toggle-password-btn"
+                        aria-label="Show password"
+                    >
+                        Show
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <div class="card span-5 aroma-card">
-            <div class="card-title">
-                <h3>Feature Preview</h3>
-                <span>Visual</span>
+            <div class="form-options">
+                <label class="remember-label">
+                    <input type="checkbox" id="rememberMe">
+                    <span>Remember session on this device</span>
+                </label>
             </div>
 
-            <div class="picture-holder" aria-label="Picture placeholder">
-                <span>Feature Preview Graphic</span>
-            </div>
-        </div>
-
-        <div class="card span-7 timer-card">
-            <div class="card-title">
-                <h3>Capabilities</h3>
-                <span>Key Features</span>
-            </div>
-
-            <h2 class="section-heading">Key Features</h2>
-
-            <p class="body-copy">
-                Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here. Enter Description here.
-            </p>
-        </div>
-
-    </div>
-
+            <button type="submit" class="signin-btn">Sign In</button>
+        </form>
+    </section>
 </main>
 
 <footer>
@@ -687,7 +598,7 @@ footer {
 </footer>
 
 <script>
-// ================= SPLASH SCREEN =================
+// ================= SPLASH SCREEN (3 SECONDS) =================
 (function initSplash() {
     const splash = document.getElementById("splashScreen");
     const statusText = document.getElementById("splashStatus");
@@ -723,7 +634,7 @@ footer {
 
     setTimeout(() => {
         if (statusText && !dismissed) {
-            statusText.textContent = "Opening OdorBot...";
+            statusText.textContent = "Opening sign-in portal...";
         }
     }, 1500);
 
@@ -731,15 +642,6 @@ footer {
         dismissSplash();
     }, 3000);
 })();
-
-// ================= MOBILE MENU =================
-const toggleBtn = document.querySelector(".menu-toggle");
-const nav = document.querySelector("nav.primary");
-
-toggleBtn.addEventListener("click", () => {
-    const isOpen = nav.classList.toggle("show");
-    toggleBtn.setAttribute("aria-expanded", isOpen);
-});
 
 // ================= PHILIPPINE DATE & TIME =================
 function updateDateTime() {
@@ -764,17 +666,95 @@ function updateDateTime() {
     const timeElement = document.getElementById("currentTime");
     const dateElement = document.getElementById("currentDate");
 
-    if (timeElement) {
-        timeElement.textContent = time;
-    }
-
-    if (dateElement) {
-        dateElement.textContent = date;
-    }
+    if (timeElement) timeElement.textContent = time;
+    if (dateElement) dateElement.textContent = date;
 }
 
 updateDateTime();
 setInterval(updateDateTime, 1000);
+
+// ================= SIGN-IN INTERACTION =================
+const signinForm = document.getElementById("signinForm");
+const usernameInput = document.getElementById("usernameOrEmail");
+const passwordInput = document.getElementById("password");
+const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+const rememberMeInput = document.getElementById("rememberMe");
+const alertBox = document.getElementById("signinAlert");
+
+const SAVED_USER_KEY = "odorbot_saved_user";
+const AUTH_SESSION_KEY = "odorbot_authenticated";
+const NEXT_PAGE = "home.html";
+
+// Set your own username and password directly
+const EXPECTED_USERNAME = "admin";
+const EXPECTED_PASSWORD = "odorbot2026";
+
+const savedUser = localStorage.getItem(SAVED_USER_KEY);
+if (savedUser) {
+    usernameInput.value = savedUser;
+    rememberMeInput.checked = true;
+}
+
+togglePasswordBtn.addEventListener("click", () => {
+    const isPassword = passwordInput.type === "password";
+    passwordInput.type = isPassword ? "text" : "password";
+    togglePasswordBtn.textContent = isPassword ? "Hide" : "Show";
+    togglePasswordBtn.setAttribute(
+        "aria-label",
+        isPassword ? "Hide password" : "Show password"
+    );
+});
+
+function showAlert(type, message) {
+    alertBox.className = `alert-box show ${type}`;
+    alertBox.textContent = message;
+}
+
+signinForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const identifier = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!identifier) {
+        showAlert("error", "Please enter your username or email.");
+        usernameInput.focus();
+        return;
+    }
+
+    if (!password) {
+        showAlert("error", "Please enter your password.");
+        passwordInput.focus();
+        return;
+    }
+
+    const isValidUser = identifier.toLowerCase() === EXPECTED_USERNAME.toLowerCase();
+    const isValidPass = password === EXPECTED_PASSWORD;
+
+    if (!isValidUser || !isValidPass) {
+        showAlert("error", "Invalid username or password.");
+        passwordInput.value = "";
+        passwordInput.focus();
+        return;
+    }
+
+    if (rememberMeInput.checked) {
+        localStorage.setItem(SAVED_USER_KEY, identifier);
+    } else {
+        localStorage.removeItem(SAVED_USER_KEY);
+    }
+
+    sessionStorage.setItem(AUTH_SESSION_KEY, JSON.stringify({
+        user: identifier,
+        signedInAt: Date.now()
+    }));
+
+    showAlert("success", "Signed in. Redirecting to OdorBot...");
+
+    setTimeout(() => {
+        window.location.href = NEXT_PAGE;
+    }, 650);
+});
 </script>
 
 </body>
