@@ -435,37 +435,6 @@ canvas {
     height: 100%;
 }
 
-/* ================= HISTORY ================= */
-
-.history-table-wrap {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    font-variant-numeric: tabular-nums;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-}
-
-th {
-    color: var(--muted);
-    font-weight: 600;
-}
-
-.empty-state {
-    padding: 35px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 13px;
-}
-
 /* ================= FOOTER ================= */
 
 footer {
@@ -576,7 +545,7 @@ footer {
         </div>
 
         <nav>
-            <a href="index.html" class="nav-btn">
+            <a href="home.html" class="nav-btn">
                 Home
             </a>
 
@@ -790,43 +759,6 @@ footer {
             </div>
         </div>
 
-        <div class="card span-12">
-            <div class="card-title">
-                <h3>Ammonia Reading History</h3>
-                <span>Recent data</span>
-            </div>
-
-            <div class="chart-container">
-                <canvas id="dashboardChart"></canvas>
-            </div>
-        </div>
-
-        <div class="card span-12">
-            <div class="card-title">
-                <h3>Recent Readings</h3>
-                <span id="historyCount">0 readings</span>
-            </div>
-
-            <div class="history-table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date / Time</th>
-                            <th>Ammonia (ppm)</th>
-                            <th>Aroma Level (%)</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="historyTable"></tbody>
-                </table>
-
-                <div id="historyEmpty" class="empty-state">
-                    No readings recorded yet.
-                </div>
-            </div>
-        </div>
-
     </div>
 
 </section>
@@ -1004,7 +936,6 @@ function showPage(pageName, button) {
     }
 
     if (pageName === "dashboard") {
-        renderHistoryTable();
         drawChart("dashboardChart");
     }
 
@@ -1072,10 +1003,7 @@ function recordReading(nh3, aroma) {
 
     saveHistory();
 
-    renderHistoryTable();
     updateAnalytics();
-
-    drawChart("dashboardChart");
     drawChart("analyticsChart");
 }
 
@@ -1107,8 +1035,7 @@ function updateAmmoniaStatus(nh3) {
     document.getElementById("dashboardStatus").textContent =
         high ? "Elevated Ammonia" : "Normal";
 
-    document.getElementById("dashboardStatusText").textContent =
-        status;
+    document.getElementById("dashboardStatusText").textContent = status;
 
     document.getElementById("dashboardDescription").textContent =
         description;
@@ -1326,49 +1253,6 @@ function updateHuskTimer() {
 }
 
 // =====================================================
-// HISTORY TABLE
-// =====================================================
-
-function renderHistoryTable() {
-
-    const tbody = document.getElementById("historyTable");
-    const empty = document.getElementById("historyEmpty");
-
-    tbody.innerHTML = "";
-
-    const recent = [...historyData].reverse().slice(0, 20);
-
-    document.getElementById("historyCount").textContent =
-        historyData.length + " readings";
-
-    empty.style.display = recent.length === 0
-        ? "block"
-        : "none";
-
-    recent.forEach(entry => {
-
-        const date = new Date(entry.timestamp);
-
-        const high = entry.nh3 > AMMONIA_THRESHOLD;
-
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td>${date.toLocaleString("en-PH", { timeZone: "Asia/Manila" })}</td>
-            <td>${Number(entry.nh3).toFixed(1)}</td>
-            <td>${Math.round(Number(entry.aroma))}%</td>
-            <td>
-                <span class="status-pill ${high ? "high" : ""}">
-                    ${high ? "HIGH" : "NORMAL"}
-                </span>
-            </td>
-        `;
-
-        tbody.appendChild(row);
-    });
-}
-
-// =====================================================
 // ANALYTICS
 // =====================================================
 
@@ -1420,9 +1304,7 @@ function updateAnalytics() {
 function clearHistory() {
     historyData = [];
     saveHistory();
-    renderHistoryTable();
     updateAnalytics();
-    drawChart("dashboardChart");
     drawChart("analyticsChart");
 }
 
@@ -1539,9 +1421,7 @@ function drawChart(canvasId) {
 
 updateHuskTimer();
 setInterval(updateHuskTimer, 1000);
-renderHistoryTable();
 updateAnalytics();
-drawChart("dashboardChart");
 startFirebaseMonitoring();
 </script>
 
