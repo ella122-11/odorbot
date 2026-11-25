@@ -316,7 +316,7 @@ main {
     background: #fff9dd;
 }
 
-/* ================= AROMA PROGRESS ================= */
+/* ================= WATER LEVEL PROGRESS ================= */
 
 .progress-track {
     width: 100%;
@@ -535,7 +535,8 @@ footer {
 
         <div class="brand">
             <div class="brand-icon">
-                <img src="logo.png" alt="OdorBot Logo" onerror="this.style.display='none'">
+                <img src="logo.png" alt="OdorBot Logo"
+                     onerror="this.style.display='none'">
             </div>
 
             <div>
@@ -621,15 +622,20 @@ footer {
             </div>
         </div>
 
+        <!-- WATER LEVEL CARD -->
         <div class="card span-6 aroma-card">
             <div class="card-title">
-                <h3>Aroma Diffuser Level</h3>
-                <span>Water level</span>
+                <h3>Water Level</h3>
+                <span>Live monitoring</span>
             </div>
 
             <div class="metric-value">
                 <span id="homeAroma">--</span>
                 <span class="metric-unit">%</span>
+            </div>
+
+            <div id="homeWaterStatus" class="metric-footer">
+                Waiting for water-level data...
             </div>
 
             <div class="progress-track">
@@ -692,7 +698,7 @@ footer {
 
 </section>
 
-<!-- ================= DASHBOARD PAGE SECTION ================= -->
+<!-- ================= DASHBOARD PAGE ================= -->
 
 <section id="dashboard" class="page active">
 
@@ -739,14 +745,20 @@ footer {
             </div>
         </div>
 
+        <!-- WATER LEVEL CARD -->
         <div class="card span-12 aroma-card">
             <div class="card-title">
-                <h3>Aroma Diffuser Level</h3>
+                <h3>Water Level</h3>
+                <span>Live sensor reading</span>
             </div>
 
             <div class="metric-value">
                 <span id="dashboardAroma">--</span>
                 <span class="metric-unit">%</span>
+            </div>
+
+            <div id="dashboardWaterStatus" class="metric-footer">
+                Waiting for water-level data...
             </div>
 
             <div class="progress-track">
@@ -763,13 +775,13 @@ footer {
 
 </section>
 
-<!-- ================= ANALYTICS PAGE SECTION ================= -->
+<!-- ================= ANALYTICS PAGE ================= -->
 
 <section id="analytics" class="page">
 
     <div class="page-heading">
         <h2>Usage Analytics</h2>
-        <p>Historical ammonia and aroma diffuser monitoring data.</p>
+        <p>Historical ammonia and water-level monitoring data.</p>
     </div>
 
     <div class="grid">
@@ -787,7 +799,7 @@ footer {
 
         <div class="card span-6 aroma-card">
             <div class="card-title">
-                <h3>Average Aroma Level</h3>
+                <h3>Average Water Level</h3>
             </div>
 
             <div class="metric-value">
@@ -952,6 +964,7 @@ function showPage(pageName, button) {
 function loadHistory() {
 
     try {
+
         const saved = localStorage.getItem(HISTORY_KEY);
 
         if (!saved) return [];
@@ -961,6 +974,7 @@ function loadHistory() {
         return Array.isArray(parsed) ? parsed : [];
 
     } catch (error) {
+
         console.error("History loading error:", error);
         return [];
     }
@@ -969,12 +983,14 @@ function loadHistory() {
 function saveHistory() {
 
     try {
+
         localStorage.setItem(
             HISTORY_KEY,
             JSON.stringify(historyData)
         );
 
     } catch (error) {
+
         console.error("Unable to save history:", error);
     }
 }
@@ -1064,7 +1080,7 @@ function updateAmmoniaReading(nh3) {
 }
 
 // =====================================================
-// AROMA LEVEL DISPLAY
+// WATER LEVEL DISPLAY
 // =====================================================
 
 function updateAromaLevel(level) {
@@ -1075,17 +1091,42 @@ function updateAromaLevel(level) {
 
     currentAroma = level;
 
-    document.getElementById("homeAroma").textContent =
-        Math.round(level);
+    const roundedLevel = Math.round(level);
 
-    document.getElementById("dashboardAroma").textContent =
-        Math.round(level);
+    let waterStatus = "";
+
+    if (level < 20) {
+        waterStatus = "VERY LOW - Refill water";
+    }
+    else if (level < 40) {
+        waterStatus = "LOW - Water refill recommended";
+    }
+    else if (level < 80) {
+        waterStatus = "NORMAL - Water level sufficient";
+    }
+    else {
+        waterStatus = "HIGH - Water level sufficient";
+    }
+
+    // HOME PAGE
+    document.getElementById("homeAroma").textContent =
+        roundedLevel;
 
     document.getElementById("homeAromaBar").style.width =
         level + "%";
 
+    document.getElementById("homeWaterStatus").textContent =
+        waterStatus;
+
+    // DASHBOARD PAGE
+    document.getElementById("dashboardAroma").textContent =
+        roundedLevel;
+
     document.getElementById("dashboardAromaBar").style.width =
         level + "%";
+
+    document.getElementById("dashboardWaterStatus").textContent =
+        waterStatus;
 }
 
 // =====================================================
@@ -1148,7 +1189,7 @@ async function fetchFirebaseData() {
         const aroma = Number(data.aroma);
 
         if (!Number.isFinite(nh3) || !Number.isFinite(aroma)) {
-            throw new Error("Invalid ammonia or aroma data.");
+            throw new Error("Invalid ammonia or water-level data.");
         }
 
         updateAmmoniaReading(nh3);
@@ -1202,6 +1243,7 @@ function getTimerStart() {
     let saved = localStorage.getItem(TIMER_KEY);
 
     if (!saved) {
+
         const now = Date.now();
 
         localStorage.setItem(TIMER_KEY, now.toString());
@@ -1302,9 +1344,13 @@ function updateAnalytics() {
 }
 
 function clearHistory() {
+
     historyData = [];
+
     saveHistory();
+
     updateAnalytics();
+
     drawChart("analyticsChart");
 }
 
@@ -1375,8 +1421,11 @@ function drawChart(canvasId) {
     ctx.textAlign = "right";
 
     const ticks = 4;
+
     for (let i = 0; i <= ticks; i++) {
+
         const val = min + ((max - min) / ticks) * i;
+
         const y = paddingTop + chartHeight - (i / ticks) * chartHeight;
 
         ctx.beginPath();
@@ -1391,12 +1440,15 @@ function drawChart(canvasId) {
         ((AMMONIA_THRESHOLD - min) / (max - min)) * chartHeight;
 
     ctx.save();
+
     ctx.strokeStyle = "#e16e6e";
     ctx.setLineDash([6, 5]);
+
     ctx.beginPath();
     ctx.moveTo(paddingLeft, thresholdY);
     ctx.lineTo(width - paddingRight, thresholdY);
     ctx.stroke();
+
     ctx.restore();
 
     ctx.strokeStyle = "#e7b54d";
@@ -1404,8 +1456,11 @@ function drawChart(canvasId) {
     ctx.beginPath();
 
     data.forEach((entry, idx) => {
+
         const x = paddingLeft + (idx / (data.length - 1)) * chartWidth;
+
         const clamped = Math.max(min, Math.min(max, Number(entry.nh3)));
+
         const y = paddingTop + chartHeight -
             ((clamped - min) / (max - min)) * chartHeight;
 
@@ -1419,10 +1474,17 @@ function drawChart(canvasId) {
     ctx.stroke();
 }
 
+// =====================================================
+// INITIALIZATION
+// =====================================================
+
 updateHuskTimer();
 setInterval(updateHuskTimer, 1000);
+
 updateAnalytics();
+
 startFirebaseMonitoring();
+
 </script>
 
 </body>
