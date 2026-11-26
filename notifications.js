@@ -33,7 +33,7 @@ const firebaseConfig = {
 // VAPID PUBLIC KEY
 // -----------------------------------------
 
-const VAPID_KEY = "YOUR_VAPID_PUBLIC_KEY";
+const VAPID_KEY = "BGjLquViXPedhMlFHPbMdGqUcxxSPMgAhO2aeVQfcDFb-moPRysTVbRff0hbqkKB03DjLl6xLGvPZ1JH7P00Bzc";
 
 // -----------------------------------------
 // INITIALIZE FIREBASE
