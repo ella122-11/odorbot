@@ -1,0 +1,68 @@
+[debug] [2026-11-26T08:13:24.329Z] ----------------------------------------------------------------------
+[debug] [2026-11-26T08:13:24.335Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\franc\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init functions
+[debug] [2026-11-26T08:13:24.335Z] CLI Version:   15.37.0
+[debug] [2026-11-26T08:13:24.335Z] Platform:      win32
+[debug] [2026-11-26T08:13:24.336Z] Node Version:  v26.13.1
+[debug] [2026-11-26T08:13:24.336Z] Detected Agent: unknown
+[debug] [2026-11-26T08:13:24.336Z] Time:          Thu Nov 26 2026 16:13:24 GMT+0800 (Philippine Standard Time)
+[debug] [2026-11-26T08:13:24.336Z] ----------------------------------------------------------------------
+[debug] 
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\franc\PycharmProjects\PythonProject\OdorBot Website
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[debug] [2026-11-26T08:14:53.938Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-26T08:14:53.939Z] > authorizing via signed-in user (franciscojanellamarie@gmail.com)
+[debug] [2026-11-26T08:14:53.970Z] Checked if tokens are valid: true, expires at: 1795684015682
+[debug] [2026-11-26T08:14:53.971Z] Checked if tokens are valid: true, expires at: 1795684015682
+[debug] [2026-11-26T08:14:53.972Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/odorbot-ea9bb [none]
+[debug] [2026-11-26T08:14:54.780Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/odorbot-ea9bb 200
+[debug] [2026-11-26T08:14:54.780Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/odorbot-ea9bb {"projectId":"odorbot-ea9bb","projectNumber":"936358417426","displayName":"odorbot","name":"projects/odorbot-ea9bb","resources":{"hostingSite":"odorbot-ea9bb","realtimeDatabaseInstance":"odorbot-ea9bb-default-rtdb"},"state":"ACTIVE","labels":{"firebase":"enabled"},"etag":"1_34193cc6-40c5-4cc5-a848-7be5d33cc1e8"}
+[info] i  Using project odorbot-ea9bb (odorbot) . 
+[info] 
+=== Functions Setup
+[debug] [2026-11-26T08:14:54.791Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-11-26T08:14:54.792Z] > authorizing via signed-in user (franciscojanellamarie@gmail.com)
+[debug] [2026-11-26T08:14:54.792Z] [iam] checking project odorbot-ea9bb for permissions ["firebase.projects.get"]
+[debug] [2026-11-26T08:14:54.793Z] Checked if tokens are valid: true, expires at: 1795684015682
+[debug] [2026-11-26T08:14:54.793Z] Checked if tokens are valid: true, expires at: 1795684015682
+[debug] [2026-11-26T08:14:54.793Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/odorbot-ea9bb:testIamPermissions [none]
+[debug] [2026-11-26T08:14:54.793Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/odorbot-ea9bb:testIamPermissions  x-goog-user-project=odorbot-ea9bb
+[debug] [2026-11-26T08:14:54.793Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/odorbot-ea9bb:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2026-11-26T08:14:56.007Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/odorbot-ea9bb:testIamPermissions 200
+[debug] [2026-11-26T08:14:56.007Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/odorbot-ea9bb:testIamPermissions {"permissions":["firebase.projects.get"]}
+[info] 
+Detected existing codebase(s): default
+
+[info] Let's create a new codebase for your functions.
+[info] A directory corresponding to the codebase will be created in your project
+[info] with sample code pre-configured.
+
+[info] See https://firebase.google.com/docs/functions/organize-functions for
+[info] more information on organizing your functions using codebases.
+
+[info] Functions can be deployed with firebase deploy.
+
+[info] +  Wrote odorbot/package.json 
+[info] +  Wrote odorbot/index.js 
+[info] +  Wrote odorbot/.gitignore 
+[info] 
+=== Agent Skills Setup
+[info] If you are using an AI coding agent, Firebase Agent Skills make it an expert at Firebase.
