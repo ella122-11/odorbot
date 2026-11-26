@@ -701,6 +701,12 @@ footer {
 <!-- ================= DASHBOARD PAGE ================= -->
 
 <section id="dashboard" class="page active">
+<button
+    id="notificationButton"
+    class="secondary-btn"
+    onclick="enableOdorBotNotifications()">
+    Enable Notifications
+</button>
 
     <div class="page-heading">
         <h2>Monitoring Dashboard</h2>
@@ -708,6 +714,9 @@ footer {
     </div>
 
     <div class="grid">
+
+
+
 
         <div class="card span-6 status-card">
             <div class="card-title">
@@ -1486,6 +1495,8 @@ updateAnalytics();
 startFirebaseMonitoring();
 
 </script>
+
+<script type="module" src="notifications.js"></script>
 
 </body>
 </html>
