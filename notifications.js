@@ -148,16 +148,18 @@ window.updateNotificationButton = function() {
   const enabled =
     localStorage.getItem("odorbot_notifications_enabled") === "true";
 
-  if (enabled && Notification.permission === "granted") {
+  const permissionGranted =
+    "Notification" in window &&
+    Notification.permission === "granted";
+
+  if (enabled && permissionGranted) {
 
     button.textContent = "Notifications Enabled";
-
     button.disabled = true;
 
   } else {
 
     button.textContent = "Enable Notifications";
-
     button.disabled = false;
   }
 };
