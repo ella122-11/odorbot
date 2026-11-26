@@ -17,14 +17,16 @@ import {
 // FIREBASE CONFIG
 // -----------------------------------------
 
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyAJKIq3K1ItSIyUlyb-8yRwDVrLkmzeJP0",
   authDomain: "odorbot-ea9bb.firebaseapp.com",
   databaseURL: "https://odorbot-ea9bb-default-rtdb.firebaseio.com",
   projectId: "odorbot-ea9bb",
-  storageBucket: "odorbot-ea9bb.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  storageBucket: "odorbot-ea9bb.firebasestorage.app",
+  messagingSenderId: "936358417426",
+  appId: "1:936358417426:web:d5af9eaf065cef0e17b4cb",
+  measurementId: "G-YJ383GWKN3"
 };
 
 // -----------------------------------------
