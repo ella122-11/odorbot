@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -228,25 +227,11 @@ main {
     font-size: 12px;
 }
 
-.ammonia-card {
-    background: #fff4f5;
-}
-
-.high-card {
-    background: #ffe8e8;
-}
-
-.low-card {
-    background: #fff9dd;
-}
-
-.operation-card {
-    background: #fce8f0;
-}
-
-.aroma-card {
-    background: #e4f6ec;
-}
+.ammonia-card { background: #fff4f5; }
+.high-card { background: #ffe8e8; }
+.low-card { background: #fff9dd; }
+.operation-card { background: #fce8f0; }
+.aroma-card { background: #e4f6ec; }
 
 /* ================= STATUS ================= */
 
@@ -278,7 +263,8 @@ main {
     color: #46866b;
 }
 
-.status-pill.very-high {
+.status-pill.very-high,
+.status-pill.critical {
     background: #ffd4d4;
     color: #b33d3d;
 }
@@ -401,13 +387,8 @@ th {
     font-weight: 700;
 }
 
-.connection-status.connected {
-    color: var(--green);
-}
-
-.connection-status.disconnected {
-    color: var(--red);
-}
+.connection-status.connected { color: var(--green); }
+.connection-status.disconnected { color: var(--red); }
 
 .status-dot {
     width: 9px;
@@ -513,7 +494,7 @@ footer {
         </div>
 
         <nav>
-            <a href="index.html" class="nav-btn">Home</a>
+            <a href="home.html" class="nav-btn">Home</a>
             <a href="dashboard.html" class="nav-btn">Dashboard</a>
             <a href="analytics.html" class="nav-btn active">Usage Analytics</a>
         </nav>
@@ -530,13 +511,12 @@ footer {
 
     <div class="page-heading">
         <h2>Usage Analytics</h2>
-        <p>Historical ammonia readings, detection records, and OdorBot operation logs.</p>
+        <p>Historical ammonia trends and HIGH / CRITICAL detection records.</p>
     </div>
 
     <div class="info-box">
-        Historical ammonia readings are retrieved directly from Firebase.
-        Each record represents a reading received and stored by the ESP8266.
-        Fan activation time is displayed when available.
+        Historical ammonia readings are retrieved from Firebase. The graph shows all recorded readings, while the table displays HIGH and CRITICAL detections only.
+        Post-activation readings use the first recorded reading after the OdorBot activation timestamp, when available.
     </div>
 
     <div class="grid">
@@ -554,7 +534,7 @@ footer {
             </div>
 
             <div class="metric-footer">
-                The graph includes low, normal, high, and very high readings.
+                The graph includes all readings. The dashed line marks the 15 ppm OdorBot activation threshold.
             </div>
         </div>
 
@@ -562,10 +542,13 @@ footer {
 
         <div class="card span-12">
             <div class="card-title">
-                <h3>Ammonia Detection Records</h3>
+                <h3>High & Critical Detection Records</h3>
                 <span id="recordsCount">0 records</span>
             </div>
 
+            <div class="metric-footer" style="margin-bottom:15px;">
+                Only HIGH (15–19.99 ppm) and CRITICAL (20 ppm and above) detections are listed. “Reading After Activation” shows the first saved reading after the activation timestamp, when available.
+            </div>
             <div class="history-table-wrap">
                 <table>
                     <thead>
@@ -574,7 +557,8 @@ footer {
                             <th>Time Recorded</th>
                             <th>NH₃ (ppm)</th>
                             <th>Ammonia Range</th>
-                            <th>Fan Activated At</th>
+                            <th>OdorBot Activated Time</th>
+                            <th>Reading After Activation</th>
                         </tr>
                     </thead>
 
@@ -582,112 +566,11 @@ footer {
                 </table>
 
                 <div id="detectionEmpty" class="empty-state">
-                    No ammonia readings recorded yet.
+                    No HIGH or CRITICAL ammonia readings recorded yet.
                 </div>
             </div>
         </div>
 
-        <!-- FAN OPERATION LOG -->
-
-        <div class="card span-12">
-            <div class="card-title">
-                <h3>OdorBot Operation Log</h3>
-                <span>High readings only</span>
-            </div>
-
-            <div class="history-table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Detection Time</th>
-                            <th>Ammonia (ppm)</th>
-                            <th>Range</th>
-                            <th>Fan Activation Time</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="operationTable"></tbody>
-                </table>
-
-                <div id="operationEmpty" class="empty-state">
-                    No high-ammonia fan operation records available.
-                </div>
-            </div>
-
-            <div class="info-box" style="margin-top:20px; margin-bottom:0;">
-                Fan activation time shows when the exhaust fan was activated
-                following a high ammonia reading. The time is displayed when
-                a fan activation timestamp is provided by Firebase.
-            </div>
-        </div>
-
-        <!-- RANGE SUMMARY -->
-
-        <div class="card span-12">
-            <div class="card-title">
-                <h3>Ammonia Range Summary</h3>
-                <span>Distribution of recorded readings</span>
-            </div>
-
-            <div class="grid">
-
-                <div class="card span-4 low-card">
-                    <div class="metric-label">Very Low</div>
-                    <div class="metric-value" id="veryLowCount">0</div>
-                </div>
-
-                <div class="card span-4 low-card">
-                    <div class="metric-label">Low</div>
-                    <div class="metric-value" id="lowCount">0</div>
-                </div>
-
-                <div class="card span-4 aroma-card">
-                    <div class="metric-label">Normal</div>
-                    <div class="metric-value" id="normalCount">0</div>
-                </div>
-
-                <div class="card span-6 high-card">
-                    <div class="metric-label">High</div>
-                    <div class="metric-value" id="highCountRange">0</div>
-                </div>
-
-                <div class="card span-6 high-card">
-                    <div class="metric-label">Very High</div>
-                    <div class="metric-value" id="veryHighCount">0</div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- CONNECTION -->
-
-        <div class="card span-12">
-            <div class="card-title">
-                <h3>Analytics Data Connection</h3>
-            </div>
-
-            <div class="connection-row">
-                <div>
-                    <div id="connectionStatus" class="connection-status">
-                        <span class="status-dot"></span>
-                        <span id="connectionText">Connecting to Firebase...</span>
-                    </div>
-
-                    <div id="connectionDetail" class="connection-detail">
-                        Checking historical database connection
-                    </div>
-                </div>
-
-                <button class="secondary-btn" onclick="fetchFirebaseData()">
-                    Refresh Data
-                </button>
-            </div>
-
-            <div id="firebaseError" class="alert-box">
-                Unable to retrieve historical data from Firebase.
-            </div>
-        </div>
 
     </div>
 
@@ -697,8 +580,7 @@ footer {
     ODORBOT MONITORING SYSTEM &bull; Smart Odor Monitoring
 </footer>
 
-<!-- Chart.js MUST load before the analytics script -->
-
+<!-- Chart.js MUST load before analytics script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -712,14 +594,16 @@ const FIREBASE_HISTORY_URL =
 
 const REFRESH_INTERVAL = 5000;
 
-const AMMONIA_THRESHOLD = 1.0;
+const AMMONIA_THRESHOLD = 15.0; // OdorBot activation threshold
 
-const VERY_LOW_LIMIT = 0.25;
-const LOW_LIMIT = 0.50;
-const HIGH_LIMIT = 5.00;
+const VERY_LOW_LIMIT = 5.0;
+const LOW_LIMIT = 10.0;
+const HIGH_LIMIT = 15.0;
+const CRITICAL_LIMIT = 20.0;
 
 const ANALYTICS_KEY = "odorbot_analytics_history";
 const MAX_HISTORY = 2000;
+
 
 // =====================================================
 // GLOBAL VARIABLES
@@ -731,15 +615,13 @@ let chartInstance = null;
 let firebaseConnected = false;
 let fetchInProgress = false;
 
-// =====================================================
-// DATE & TIME
-// =====================================================
 
-// ===============================
-// PHILIPPINE DATE AND TIME
-// ===============================
+// =====================================================
+// PHILIPPINE DATE & TIME
+// =====================================================
 
 function updateDateTime() {
+
     const now = new Date();
 
     const timeElement = document.getElementById("currentTime");
@@ -766,11 +648,6 @@ function updateDateTime() {
     }
 }
 
-// Display immediately upon loading
-updateDateTime();
-
-// Update every second
-setInterval(updateDateTime, 1000);
 
 // =====================================================
 // LOCAL CACHE
@@ -796,6 +673,7 @@ function loadAnalyticsHistory() {
     }
 }
 
+
 function saveAnalyticsHistory() {
 
     try {
@@ -811,6 +689,7 @@ function saveAnalyticsHistory() {
     }
 }
 
+
 // =====================================================
 // AMMONIA RANGE
 // =====================================================
@@ -821,12 +700,13 @@ function getAmmoniaRange(nh3) {
 
     if (nh3 < LOW_LIMIT) return "Low";
 
-    if (nh3 <= AMMONIA_THRESHOLD) return "Normal";
+    if (nh3 < HIGH_LIMIT) return "Normal";
 
-    if (nh3 < HIGH_LIMIT) return "High";
+    if (nh3 < CRITICAL_LIMIT) return "High";
 
-    return "Very High";
+    return "Critical";
 }
+
 
 function getRangeClass(range) {
 
@@ -844,7 +724,7 @@ function getRangeClass(range) {
         case "High":
             return "high";
 
-        case "Very High":
+        case "Critical":
             return "very-high";
 
         default:
@@ -852,9 +732,11 @@ function getRangeClass(range) {
     }
 }
 
+
 function isHighReading(nh3) {
-    return nh3 > AMMONIA_THRESHOLD;
+    return nh3 >= HIGH_LIMIT;
 }
+
 
 // =====================================================
 // CONNECTION STATUS
@@ -868,6 +750,8 @@ function updateConnectionStatus(connected, message = "") {
     const text = document.getElementById("connectionText");
     const detail = document.getElementById("connectionDetail");
     const error = document.getElementById("firebaseError");
+
+    if (!status || !text || !detail || !error) return;
 
     status.classList.remove("connected", "disconnected");
 
@@ -891,35 +775,124 @@ function updateConnectionStatus(connected, message = "") {
     }
 }
 
+
 // =====================================================
 // TIMESTAMP NORMALIZATION
 // =====================================================
 
 function normalizeTimestamp(value) {
 
-    if (value === null || value === undefined) {
+    if (value === null || value === undefined || value === "") {
         return null;
     }
 
-    let timestamp = Number(value);
+    // Firebase timestamp object
+    if (typeof value === "object") {
 
-    if (!Number.isFinite(timestamp) || timestamp <= 0) {
+        if (value.seconds !== undefined) {
+            value = Number(value.seconds) * 1000;
+        } else {
+            return null;
+        }
+    }
+
+    // Numeric timestamps
+    if (typeof value === "number" || !isNaN(Number(value))) {
+
+        let timestamp = Number(value);
+
+        if (!Number.isFinite(timestamp) || timestamp <= 0) {
+            return null;
+        }
+
+        // Convert seconds to milliseconds
+        if (timestamp < 1000000000000) {
+            timestamp *= 1000;
+        }
+
+        return Number.isFinite(new Date(timestamp).getTime())
+            ? timestamp
+            : null;
+    }
+
+    // ISO date strings
+    const parsed = Date.parse(value);
+
+    if (!Number.isFinite(parsed)) {
         return null;
     }
 
-    // Convert seconds to milliseconds if necessary
-    if (timestamp < 1000000000000) {
-        timestamp *= 1000;
-    }
+    return parsed;
+}
 
-    const date = new Date(timestamp);
+
+// =====================================================
+// PHILIPPINE DATE FORMAT
+// =====================================================
+
+function formatPhilippineDate(timestamp) {
+
+    const date = new Date(Number(timestamp));
 
     if (isNaN(date.getTime())) {
-        return null;
+        return "Invalid Date";
     }
 
-    return timestamp;
+    return date.toLocaleDateString("en-PH", {
+        timeZone: "Asia/Manila",
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric"
+    });
 }
+
+
+// =====================================================
+// PHILIPPINE TIME FORMAT
+// =====================================================
+
+function formatPhilippineTime(timestamp) {
+
+    const date = new Date(Number(timestamp));
+
+    if (isNaN(date.getTime())) {
+        return "Not available";
+    }
+
+    return date.toLocaleTimeString("en-PH", {
+        timeZone: "Asia/Manila",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+    });
+}
+
+
+// =====================================================
+// PHILIPPINE DATE & TIME FORMAT
+// =====================================================
+
+function formatPhilippineDateTime(timestamp) {
+
+    const date = new Date(Number(timestamp));
+
+    if (isNaN(date.getTime())) {
+        return "Not available";
+    }
+
+    return date.toLocaleString("en-PH", {
+        timeZone: "Asia/Manila",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+    });
+}
+
 
 // =====================================================
 // FIREBASE HISTORY FETCH
@@ -961,7 +934,6 @@ async function fetchFirebaseData() {
 
         const records = [];
 
-        // Firebase POST records are stored under unique keys
         Object.entries(firebaseRecords).forEach(([firebaseKey, record]) => {
 
             if (!record || typeof record !== "object") return;
@@ -972,7 +944,6 @@ async function fetchFirebaseData() {
 
             const timestamp = normalizeTimestamp(record.timestamp);
 
-            // Skip records with invalid timestamps
             if (!timestamp) return;
 
             const fanTimestamp = normalizeTimestamp(
@@ -989,6 +960,7 @@ async function fetchFirebaseData() {
                 fanEvent: Number(record.fanEvent ?? 0),
                 fanActivatedAt: fanTimestamp
             });
+
         });
 
         mergeFirebaseRecords(records);
@@ -1016,6 +988,7 @@ async function fetchFirebaseData() {
     }
 }
 
+
 // =====================================================
 // MERGE FIREBASE RECORDS
 // =====================================================
@@ -1024,22 +997,26 @@ function mergeFirebaseRecords(firebaseRecords) {
 
     const map = new Map();
 
-    // Preserve existing cached records
+    // Preserve cached Firebase records
     analyticsData.forEach(entry => {
+
+        if (entry && entry.firebaseKey) {
+            map.set(entry.firebaseKey, entry);
+        }
+
+    });
+
+    // Insert or update Firebase records
+    firebaseRecords.forEach(entry => {
 
         if (entry.firebaseKey) {
             map.set(entry.firebaseKey, entry);
         }
-    });
 
-    // Update / insert records from Firebase
-    firebaseRecords.forEach(entry => {
-
-        map.set(entry.firebaseKey, entry);
     });
 
     analyticsData = Array.from(map.values())
-        .sort((a, b) => a.timestamp - b.timestamp);
+        .sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
 
     if (analyticsData.length > MAX_HISTORY) {
         analyticsData = analyticsData.slice(-MAX_HISTORY);
@@ -1049,6 +1026,7 @@ function mergeFirebaseRecords(firebaseRecords) {
 
     updateAnalyticsDisplay();
 }
+
 
 // =====================================================
 // GET ALL READINGS
@@ -1067,6 +1045,7 @@ function getAllReadings() {
         );
 }
 
+
 // =====================================================
 // UPDATE ANALYTICS
 // =====================================================
@@ -1076,60 +1055,12 @@ function updateAnalyticsDisplay() {
     const readings = getAllReadings();
 
     renderDetectionTable(readings);
-    renderOperationTable(readings);
-    updateRangeSummary(readings);
     drawAmmoniaChart(readings);
 
     document.getElementById("chartRecordCount").textContent =
-        readings.length + " readings";
+        readings.length + (readings.length === 1 ? " reading" : " readings");
 }
 
-// =====================================================
-// RANGE SUMMARY
-// =====================================================
-
-function updateRangeSummary(readings) {
-
-    let veryLow = 0;
-    let low = 0;
-    let normal = 0;
-    let high = 0;
-    let veryHigh = 0;
-
-    readings.forEach(entry => {
-
-        const range = getAmmoniaRange(Number(entry.nh3));
-
-        switch (range) {
-
-            case "Very Low":
-                veryLow++;
-                break;
-
-            case "Low":
-                low++;
-                break;
-
-            case "Normal":
-                normal++;
-                break;
-
-            case "High":
-                high++;
-                break;
-
-            case "Very High":
-                veryHigh++;
-                break;
-        }
-    });
-
-    document.getElementById("veryLowCount").textContent = veryLow;
-    document.getElementById("lowCount").textContent = low;
-    document.getElementById("normalCount").textContent = normal;
-    document.getElementById("highCountRange").textContent = high;
-    document.getElementById("veryHighCount").textContent = veryHigh;
-}
 
 // =====================================================
 // FORMAT FAN ACTIVATION TIME
@@ -1141,151 +1072,80 @@ function formatFanActivation(entry) {
         return "Not available";
     }
 
-    const fanTime = new Date(Number(entry.fanActivatedAt));
+    const timestamp = normalizeTimestamp(entry.fanActivatedAt);
 
-    if (isNaN(fanTime.getTime())) {
+    if (!timestamp) {
         return "Not available";
     }
 
-    return fanTime.toLocaleTimeString("en-PH", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true
-    });
+    return formatPhilippineTime(timestamp);
 }
 
+
 // =====================================================
-// DETECTION TABLE
+// HIGH & CRITICAL DETECTION TABLE
 // =====================================================
+
+function getPostActivationReading(entry, readings) {
+    const activationTimestamp = normalizeTimestamp(entry.fanActivatedAt);
+    if (!activationTimestamp) return null;
+
+    return readings
+        .filter(candidate => Number(candidate.timestamp) > activationTimestamp)
+        .sort((a, b) => Number(a.timestamp) - Number(b.timestamp))[0] || null;
+}
+
 
 function renderDetectionTable(readings) {
 
     const tbody = document.getElementById("detectionTable");
     const empty = document.getElementById("detectionEmpty");
-
     tbody.innerHTML = "";
 
-    const recent = [...readings]
-        .sort((a, b) => b.timestamp - a.timestamp);
+    const detections = readings
+        .filter(entry => isHighReading(Number(entry.nh3)))
+        .sort((a, b) => Number(b.timestamp) - Number(a.timestamp));
 
     document.getElementById("recordsCount").textContent =
-        recent.length + " records";
+        detections.length + (detections.length === 1 ? " record" : " records");
+    empty.style.display = detections.length === 0 ? "block" : "none";
 
-    empty.style.display = recent.length === 0
-        ? "block"
-        : "none";
-
-    recent.forEach(entry => {
-
-        const date = new Date(Number(entry.timestamp));
+    detections.forEach(entry => {
+        const timestamp = Number(entry.timestamp);
         const nh3 = Number(entry.nh3);
         const range = getAmmoniaRange(nh3);
-
-        const fanActivation = isHighReading(nh3)
-            ? formatFanActivation(entry)
-            : "Not triggered";
-
-        const row = document.createElement("tr");
-
-        const cells = [
-            date.toLocaleDateString("en-PH"),
-            date.toLocaleTimeString("en-PH"),
-            nh3.toFixed(2) + " ppm",
-            range,
-            fanActivation
-        ];
-
-        cells.forEach((value, index) => {
-
-            const cell = document.createElement("td");
-
-            if (index === 3) {
-
-                const badge = document.createElement("span");
-
-                badge.className =
-                    "status-pill " + getRangeClass(range);
-
-                badge.textContent = range;
-
-                cell.appendChild(badge);
-
-            } else {
-
-                cell.textContent = value;
-            }
-
-            row.appendChild(cell);
-        });
-
-        tbody.appendChild(row);
-    });
-}
-
-// =====================================================
-// FAN OPERATION LOG - HIGH READINGS ONLY
-// =====================================================
-
-function renderOperationTable(readings) {
-
-    const tbody = document.getElementById("operationTable");
-    const empty = document.getElementById("operationEmpty");
-
-    tbody.innerHTML = "";
-
-    const highRecords = readings
-        .filter(entry => isHighReading(Number(entry.nh3)))
-        .sort((a, b) => b.timestamp - a.timestamp);
-
-    empty.style.display = highRecords.length === 0
-        ? "block"
-        : "none";
-
-    highRecords.forEach(entry => {
-
-        const detectionDate = new Date(Number(entry.timestamp));
-        const nh3 = Number(entry.nh3);
-        const range = getAmmoniaRange(nh3);
-
         const fanActivation = formatFanActivation(entry);
+        const postActivation = getPostActivationReading(entry, readings);
+        const postReadingText = postActivation
+            ? Number(postActivation.nh3).toFixed(2) + " ppm (" + formatPhilippineTime(postActivation.timestamp) + ")"
+            : "Not available";
 
         const row = document.createElement("tr");
-
         const values = [
-            detectionDate.toLocaleDateString("en-PH"),
-            detectionDate.toLocaleTimeString("en-PH"),
+            formatPhilippineDate(timestamp),
+            formatPhilippineTime(timestamp),
             nh3.toFixed(2) + " ppm",
             range,
-            fanActivation
+            fanActivation,
+            postReadingText
         ];
 
         values.forEach((value, index) => {
-
             const cell = document.createElement("td");
-
             if (index === 3) {
-
                 const badge = document.createElement("span");
-
-                badge.className =
-                    "status-pill " + getRangeClass(range);
-
-                badge.textContent = range;
-
+                badge.className = "status-pill " + getRangeClass(range);
+                badge.textContent = range.toUpperCase();
                 cell.appendChild(badge);
-
             } else {
-
                 cell.textContent = value;
             }
-
             row.appendChild(cell);
         });
-
         tbody.appendChild(row);
     });
 }
+
 
 // =====================================================
 // AMMONIA GRAPH
@@ -1303,7 +1163,7 @@ function drawAmmoniaChart(readings) {
     const ctx = canvas.getContext("2d");
 
     const data = [...readings]
-        .sort((a, b) => a.timestamp - b.timestamp);
+        .sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
 
     if (chartInstance) {
         chartInstance.destroy();
@@ -1327,13 +1187,7 @@ function drawAmmoniaChart(readings) {
     }
 
     const labels = data.map(entry =>
-        new Date(Number(entry.timestamp)).toLocaleString("en-PH", {
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit"
-        })
+        formatPhilippineDateTime(entry.timestamp)
     );
 
     const values = data.map(entry => Number(entry.nh3));
@@ -1381,6 +1235,7 @@ function drawAmmoniaChart(readings) {
             },
 
             plugins: {
+
                 legend: {
                     display: true,
                     labels: {
@@ -1435,24 +1290,28 @@ function drawAmmoniaChart(readings) {
     });
 }
 
+
 // =====================================================
 // INITIALIZATION
 // =====================================================
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Date and time
+    // Philippine clock - initialize once
     updateDateTime();
+
+    // Update clock every second
     setInterval(updateDateTime, 1000);
 
-    // Display cached historical data immediately
+    // Display cached data immediately
     updateAnalyticsDisplay();
 
-    // Fetch Firebase historical data
+    // Fetch Firebase data
     fetchFirebaseData();
 
-    // Refresh historical data periodically
+    // Refresh Firebase every 5 seconds
     setInterval(fetchFirebaseData, REFRESH_INTERVAL);
+
 });
 
 </script>
